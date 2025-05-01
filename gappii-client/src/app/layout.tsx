@@ -28,12 +28,12 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          "bg-gradient-to-b from-gray-950 to-gray-900 text-white",
+          "bg-gradient-to-b from-neutral-250 to-neutral-300 text-white",
           `${geistSans.variable} ${geistMono.variable} antialiased`
         )}
       >
         <LogoText />
-        <div className="py-0 h-screen overflow-hidden">
+        <div className="py-0">
           <ChatProvider>
             {/* <StateAnimations /> */}
             {children}

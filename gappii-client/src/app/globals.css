@@ -116,11 +116,53 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
   button:not(:disabled),
   [role="button"]:not(:disabled) {
     cursor: pointer;
   }
+
+  .bg-grid {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='currentColor'><path d='M0 .5H31.5V32'/></svg>");
+  }
+}
+
+/* @layer utilities {
+  @keyframes rotate-full {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+} */
+
+@theme {
+  --animate-rotate-full: rotate-full 5s linear infinite;
+
+  @keyframes rotate-full {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+@theme {
+  --color-midnight-50: #f0f4ff;
+  --color-midnight-100: #dbe4ff;
+  --color-midnight-200: #b6caff;
+  --color-midnight-300: #8daeff;
+  --color-midnight-400: #5f8dff;
+  --color-midnight-500: #366af5;
+  --color-midnight-600: #1b4ed1;
+  --color-midnight-700: #10439F;
+  --color-midnight-800: #0b2f75;
+  --color-midnight-900: #030637;
+  --color-midnight-950: #01031e;
 }
