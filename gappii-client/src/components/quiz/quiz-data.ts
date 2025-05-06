@@ -2,6 +2,15 @@ import { QuizQuestion } from './types';
 
 export const SampleQuizData: QuizQuestion[] = [
   {
+    id: '0',
+    question: 'What is a very interesting and large question to test the quiz?',
+    options: [
+      { id: 'a', text: 'One quite big answer test 123' },
+      { id: 'b', text: 'Another answer very long test 123' }
+    ],
+    correctOptionId: 'a'
+  },
+  {
     id: '1',
     question: 'What is the capital of France?',
     options: [

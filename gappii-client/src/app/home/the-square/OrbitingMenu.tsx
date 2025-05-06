@@ -1,8 +1,10 @@
 import { cn } from "@/lib/utils";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useState } from "react";
-import { MenuOption, options } from "../menuOptionsList";
+import { Route, options } from "../menuOptionsList";
 import { capitalize } from "lodash";
+import { useSquareRouter } from "../RouterContext";
+import OrbitingOption from "./OrbitingOption";
 
 interface OrbitingItemsProps {
     /**
@@ -33,145 +35,110 @@ interface OrbitingItemsProps {
     /**
      * The function to call when an item is selected.
      */
-    onOptionHover: (option: MenuOption) => void;
+    onOptionHover: (option: Route) => void;
 }
-
-const calculateItemStyle = ({
-    index,
-    radius,
-    totalItems,
-}: {
-    radius: number;
-    index: number;
-    totalItems: number;
-}) => {
-    const angle = (index / totalItems) * 360;
-    const radians = (angle * Math.PI) / 180;
-    const x = radius * Math.cos(radians);
-    const y = radius * Math.sin(radians);
-    return {
-        left: `${50 + x}%`,
-        top: `${50 + y}%`,
-        transform: "translate(-50%, -50%)",
-    };
-};
 
 export default function OrbitingMenu({
     radius = 50,
     pauseOnHover,
     backgroundClassName,
     containerClassName,
-    onOptionHover,
     className,
 }: OrbitingItemsProps) {
-    const [lastHovered, setLastHovered] = useState<MenuOption>("continue");
+    const [lastHovered, setLastHovered] = useState<Route>("continue");
+    const { router, setRouter } = useSquareRouter()
+
+    const isInSquare = router === "inSquare"
 
     return (
-        <AnimatePresence>
-            <motion.div
-                initial={{
-                    opacity: 0
-                }}
-                animate={{
-                    opacity: 1
-                }}
-                transition={{
-                    duration: 2.5,
-                    ease: "easeInOut"
-                }}
-                className="absolute bottom-0 left-0 w-full h-full">
-
+        <motion.div
+            layout
+            animate={{
+                opacity: [0, 1],
+                scale: [0, 1]
+            }}
+            exit={{
+                opacity: [1, 0],
+                scale: [1, 0]
+            }}
+            transition={{
+                duration: 0.5,
+                ease: "linear",
+            }}
+            className="absolute bottom-0 left-0 w-full h-full"
+        >
+            <div
+                className={cn(
+                    "storybook-fix group flex items-center justify-center py-56",
+                    containerClassName,
+                )}
+            >
                 <div
                     className={cn(
-                        "storybook-fix group flex items-center justify-center py-32",
-                        containerClassName,
+                        "absolute inset-0 h-full w-full items-center ",
+                        backgroundClassName,
+                    )}
+                />
+                <motion.div
+                    animate={{
+                        rotate: isInSquare ? [0, 360] : 0,
+                    }}
+                    transition={{
+                        duration: isInSquare ? 45 : 0,
+                        ease: "linear",
+                        repeat: isInSquare ? Infinity : 0,
+                        repeatType: "loop"
+                    }}
+                    className={cn(
+                        "relative flex h-64 w-64 items-center justify-center",
+                        {
+                            "group-hover:[animation-play-state:paused]": pauseOnHover,
+                        },
+                        className,
                     )}
                 >
-                    <div
-                        className={cn(
-                            "absolute inset-0 h-full w-full items-center ",
-                            backgroundClassName,
-                        )}
-                    />
-                    <motion.div
-                        animate={{
-                            rotate: 360,
-                        }}
-                        transition={{
-                            duration: 45,
-                            ease: "linear",
-                            repeat: Infinity,
-                        }}
-                        className={cn(
-                            "relative flex h-64 w-64 items-center justify-center",
-                            {
-                                "group-hover:[animation-play-state:paused]": pauseOnHover,
-                            },
-                            className,
-                        )}
+                    <div className="absolute h-full w-full rounded-full border-2 border-gray-500" />
+                    {options.map((item, index) => {
+                        return (
+                            <OrbitingOption
+                                key={item.id}
+                                index={index}
+                                item={item}
+                                lastHovered={lastHovered}
+                                setLastHovered={setLastHovered}
+                                totalItems={options.length}
+                                radius={radius}
+                            />
+                        );
+                    })}
+
+                    <div className={cn(
+                        "absolute cursor-pointer h-1/2 w-1/2 rounded-full",
+                        "border-8 border-gray-200 bg-gradient-to-b from-midnight-900 to-midnight-950",
+                        "group-hover:border-8 group-hover:border-gray-200",
+                        "flex items-center justify-center"
+                    )}
+                        onClick={() => setRouter(lastHovered)}
                     >
-                        <div className="absolute h-full w-full rounded-full border-2 border-gray-500" />
-                        {options.map((item, index) => {
-                            return (
-                                <div
-                                    key={index}
-                                    onClick={() => onOptionHover(item.id)}
-                                    className={cn("absolute flex size-14 items-center justify-center rounded-full bg-midnight-900 cursor-pointer",
-                                        {
-                                            "bg-midnight-800": lastHovered === item.id,
-                                        }
-                                    )}
-                                    style={calculateItemStyle({
-                                        index,
-                                        radius,
-                                        totalItems: options.length,
-                                    })}
-                                    onMouseEnter={() => setLastHovered(item.id)}
-                                >
-                                    <motion.div
-                                        animate={{
-                                            rotate: -360,
-                                        }}
-                                        transition={{
-                                            duration: 45,
-                                            ease: "linear",
-                                            repeat: Infinity,
-                                        }}
-                                    >
-                                        {item.icon}
-                                    </motion.div>
-                                </div>
-                            );
-                        })}
-
-                        <div className={cn("absolute cursor-pointer h-1/2 w-1/2 rounded-full",
-                            "border-8 border-gray-200 bg-gradient-to-b from-midnight-900 to-midnight-950",
-                            "group-hover:border-8 group-hover:border-gray-200",
-                            "flex items-center justify-center"
-                        )}
-                            onClick={() => onOptionHover(lastHovered)}
-                        >
-                            <div className="flex items-center justify-center ">
-                                <motion.div
-                                    animate={{
-                                        rotate: -360,
-                                    }}
-                                    transition={{
-                                        duration: 45,
-                                        ease: "linear",
-                                        repeat: Infinity,
-                                    }}
-                                    className="text-white font-black text-xl flex items-center justify-center"
-                                >
-                                    {capitalize(lastHovered)}
-                                </motion.div>
-                            </div>
+                        <div className="flex items-center justify-center ">
+                            <motion.div
+                                animate={{
+                                    rotate: isInSquare ? [0, -360] : 0,
+                                }}
+                                transition={{
+                                    duration: isInSquare ? 45 : 0,
+                                    ease: "linear",
+                                    repeat: isInSquare ? Infinity : 0,
+                                    repeatType: "loop"
+                                }}
+                                className="text-white font-black text-xl flex items-center justify-center"
+                            >
+                                {capitalize(lastHovered)}
+                            </motion.div>
                         </div>
-
-                    </motion.div >
-                </div >
-            </motion.div>
-        </AnimatePresence>
-
+                    </div>
+                </motion.div>
+            </div>
+        </motion.div>
     );
 }

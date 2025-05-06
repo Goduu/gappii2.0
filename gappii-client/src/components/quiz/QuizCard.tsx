@@ -169,7 +169,7 @@ export function SessionCard({ currentQuestion, onAnswer }: QuizCardProps) {
     const handleDragEnd = () => {
         // Set dragging to false
         setIsDragging(false)
-        
+
         // Get the current position from the spring value instead of just the offset
         const currentPosition = xSpring.get();
         const isSignificantDrag = Math.abs(currentPosition) > boundaries.answerThreshold;
@@ -233,46 +233,52 @@ export function SessionCard({ currentQuestion, onAnswer }: QuizCardProps) {
 
     return (
         <motion.div
-            className="flex justify-center items-center flex-1 w-full h-full rounded-xl relative overflow-hidden"
+            className="flex flex-col justify-between items-center flex-1 w-full h-full rounded-xl relative overflow-hidden"
             style={{ background: getBackgroundColor() }}
         >
-            <p className="text-white text-xl md:text-2xl font-bold top-24 left-1/2 -translate-x-1/2 w-fit absolute">
+            <div className="h-1/2 md:h-2/5 text-white text-xl md:text-2xl font-bold w-full px-4 justify-center items-center flex">
                 {question}
-            </p>
-            {/* Left and right options with AnimatePresence for smooth transitions */}
-            <AnimatePresence mode="wait">
-                <OptionCard key={`left-${options[0].id}`} option={options[0]} position="left" />
-            </AnimatePresence>
-
-            <AnimatePresence mode="wait">
-                <OptionCard key={`right-${options[1].id}`} option={options[1]} position="right" />
-            </AnimatePresence>
-
-            {/* Draggable element */}
-            <div className="relative md:hidden mt-52 w-full bg-gray-900/70 h-[85px] rounded-xl">
-                <ChevronLeft className="size-8 absolute left-4 top-1/2 -translate-y-1/2 text-white/20" />
-                <ChevronRight className="size-8 absolute right-4 top-1/2 -translate-y-1/2 text-white/20" />
-            </div>
-            <div className="absolute mt-52 md:mt-0">
-                <DraggableCircle
-                    xSpring={xSpring}
-                    controls={controls}
-                    colorTransform={colorTransform}
-                    dragBoundaries={{ left: boundaries.leftBoundary, right: boundaries.rightBoundary }}
-                    correctAnswerPosition={options[0].id === correctOptionId ? "left" : "right"}
-                    handleDragEnd={handleDragEnd}
-                    hasAnswered={hasAnswered}
-                />
             </div>
 
-            <div className="absolute bottom-8 text-white/70 text-center">
-                <div className="opacity-75 text-sm flex flex-col items-center gap-2">
-                    <div className="flex items-center gap-2">
-                        <ChevronLeft className="size-4" />
-                        <Grab className="size-4" />
-                        <ChevronRight className="size-4" />
+            <div className="h-1/2 md:h-1/5 w-full px-4">
+                <AnimatePresence mode="wait">
+                    <div className="flex h-full gap-2 justify-between w-full">
+                        <OptionCard key={`left-${options[0].id}`} option={options[0]} position="left" />
+                        <OptionCard key={`right-${options[1].id}`} option={options[1]} position="right" />
                     </div>
-                    Drag the circle or use arrow keys to answer
+                </AnimatePresence>
+            </div>
+
+            <div className="h-1/2 md:h-1/5 w-full flex flex-col gap-4 items-center justify-center">
+                <div className="relative h-[85px] flex items-center justify-center w-full bg-gray-900/70 rounded-xl">
+                    <div className="flex items-center justify-between w-full px-4 ">
+                        <ChevronLeft className="size-8 text-white/20" />
+                        <ChevronRight className="size-8 text-white/20" />
+                    </div>
+                    <div className="absolute">
+                        <DraggableCircle
+                            xSpring={xSpring}
+                            controls={controls}
+                            colorTransform={colorTransform}
+                            dragBoundaries={{ left: boundaries.leftBoundary, right: boundaries.rightBoundary }}
+                            correctAnswerPosition={options[0].id === correctOptionId ? "left" : "right"}
+                            handleDragEnd={handleDragEnd}
+                            hasAnswered={hasAnswered}
+                        />
+                    </div>
+                </div>
+
+                <div className="text-white/70 text-center mt-4">
+                    <div className="opacity-75 text-sm flex flex-col items-center gap-2">
+                        <div className="items-center gap-2 hidden md:flex">
+                            <ChevronLeft className="size-4" />
+                            <Grab className="size-4" />
+                            <ChevronRight className="size-4" />
+                        </div>
+                        <div>
+                            Drag the circle or use arrow keys to answer
+                        </div>
+                    </div>
                 </div>
             </div>
         </motion.div>

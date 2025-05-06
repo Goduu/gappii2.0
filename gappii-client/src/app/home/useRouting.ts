@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
-import { MenuOption } from "./menuOptionsList";
+import { Route } from "./menuOptionsList";
 
-export default function useRouting(selectedOptions: MenuOption) {
+export default function useRouting(selectedOptions: Route) {
 
-    const handleRouteClick = (option: MenuOption) => {
+    const handleRouteClick = (option: Route) => {
         if (option === "continue") {
             redirect("/resume")
         }
