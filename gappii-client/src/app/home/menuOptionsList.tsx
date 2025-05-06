@@ -1,6 +1,9 @@
 import { Play, Plus, Replace, Telescope } from "lucide-react"
 import { ReactNode } from "react"
 import { Explore } from "./the-square/explore/Explore"
+import { New } from "./the-square/new/New"
+import { Change } from "./the-square/change/Change"
+import { Continue } from "./the-square/continue/Continue"
 
 export type Option = {
     id: Route,
@@ -13,12 +16,12 @@ export const options: Option[] = [
     {
         id: "continue",
         name: "Continue",
-        icon: <Play />
+        icon: <Continue />
     },
     {
         id: "change",
         name: "Change Topic",
-        icon: <Replace />
+        icon: <Change />
     },
     {
         id: "explore",
@@ -28,7 +31,7 @@ export const options: Option[] = [
     {
         id: "new",
         name: "New",
-        icon: <Plus />
+        icon: <New />
     }
 ]
 

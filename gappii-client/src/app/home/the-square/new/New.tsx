@@ -1,24 +1,24 @@
-import { TelescopeIcon } from "@/components/ui/telescope"
 import { AnimatePresence, motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { useSquareRouter } from "../../RouterContext"
-import { ExploreSubjects } from "./ExploreSubjects"
+import { Plus } from "lucide-react"
+import { TextAnimate } from "@/components/magicui/text-animate"
 
 
-export const Explore = () => {
+export const New = () => {
     const { router, setRouter } = useSquareRouter()
 
-    const isExploreRoute = router === "explore"
+    const isNewRoute = router === "new"
 
     return (
         <div className={cn(
             "z-20 flex gap-10 justify-center transition-all duration-300",
-            isExploreRoute && "bottom-0"
+            isNewRoute && "bottom-0"
         )}>
             <motion.div
                 className="drop-shadow-lg"
                 animate={{
-                    scale: isExploreRoute ? [1] : [1, 1, 0.9, 0.80, 1, 1, 0.95, 1, 1, 1, 1, 1,],
+                    scale: isNewRoute ? [1] : [1, 1, 0.9, 0.80, 1, 1, 0.95, 1, 1, 1, 1, 1,],
                 }}
                 transition={{
                     duration: 5.5,
@@ -29,34 +29,35 @@ export const Explore = () => {
 
                 <motion.div
                     layout
-                    data-expanded={isExploreRoute}
+                    data-expanded={isNewRoute}
                     className={cn(
                         "rounded-4xl drop-shadow-lg",
                         "items-center justify-center bg-gradient-to-b from-midnight-900 to-midnight-800",
                         "flex size-14 cursor-pointer transition-all duration-500",
-                        isExploreRoute && "w-screen h-screen flex-col items-center cursor-default pt-10"
+                        isNewRoute && "w-screen h-screen flex-col items-center cursor-default pt-10"
                     )}
                     onClick={() => setRouter("inSquare")}
                 >
                     <AnimatePresence>
-                        {isExploreRoute && (
-                            <ExploreSubjects />
+                        {isNewRoute && (
+                            <TextAnimate animation="slideLeft" by="character" className="text-2xl md:text-3xl font-black" duration={0.7} delay={0.4}>
+                                What do you want to learn?
+                            </TextAnimate>
                         )}
                     </AnimatePresence>
                     <div className={cn(
                         "flex flex-col items-center justify-center gap-2",
-                        isExploreRoute && "bottom-32 absolute z-20 cursor-pointer"
+                        isNewRoute && "bottom-32 absolute z-20 cursor-pointer"
                     )}
                         onClick={(e) => {
-                            if (isExploreRoute) {
+                            if (isNewRoute) {
                                 setRouter("inSquare")
                                 e.stopPropagation()
                             }
                         }
                         }
                     >
-                        <TelescopeIcon
-                        />
+                        <Plus />
                     </div>
                 </motion.div>
             </motion.div>

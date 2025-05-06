@@ -83,17 +83,16 @@ export function LearningSession({ questions, initialTime }: QuizGameProps) {
     return (
         <AnimatePresence>
             <motion.div
-                className="w-full h-screen flex flex-col bg-gray-900"
+                className="w-full h-screen flex flex-col rounded-4xl mt-20"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 1.5 }}
+                transition={{ duration: 1 }}
             >
                 {/* Score and timer header */}
                 <GameHeader score={score} timeRemaining={timer} />
 
                 {/* Main quiz area */}
-                <div className="flex-1 flex items-center justify-center">
+                <div className="flex-1 flex items-center justify-center z-50">
                     {gameActive && currentQuestion ? (
                         <div className="w-full h-full flex items-center justify-center">
                             <SessionCard

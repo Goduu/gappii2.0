@@ -2,7 +2,7 @@ import { BorderBeam } from "@/components/magicui/border-beam"
 import { Card, CardContent } from "@/components/ui/card"
 import { motion } from "framer-motion"
 
-export const ExploreSubjects = () => {
+export const ChangeSubjects = () => {
     return (
         <div className="flex items-center justify-center gap-4 w-96 flex-wrap">
             {exampleSubjects.map((item, index) => (

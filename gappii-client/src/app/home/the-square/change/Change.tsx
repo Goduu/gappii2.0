@@ -1,24 +1,24 @@
-import { TelescopeIcon } from "@/components/ui/telescope"
 import { AnimatePresence, motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { useSquareRouter } from "../../RouterContext"
-import { ExploreSubjects } from "./ExploreSubjects"
+import { ChangeSubjects } from "./ChangeSubjects"
+import { Replace } from "lucide-react"
 
 
-export const Explore = () => {
+export const Change = () => {
     const { router, setRouter } = useSquareRouter()
 
-    const isExploreRoute = router === "explore"
+    const isChangeRoute = router === "change"
 
     return (
         <div className={cn(
             "z-20 flex gap-10 justify-center transition-all duration-300",
-            isExploreRoute && "bottom-0"
+            isChangeRoute && "bottom-0"
         )}>
             <motion.div
                 className="drop-shadow-lg"
                 animate={{
-                    scale: isExploreRoute ? [1] : [1, 1, 0.9, 0.80, 1, 1, 0.95, 1, 1, 1, 1, 1,],
+                    scale: isChangeRoute ? [1] : [1, 1, 0.9, 0.80, 1, 1, 0.95, 1, 1, 1, 1, 1,],
                 }}
                 transition={{
                     duration: 5.5,
@@ -29,34 +29,33 @@ export const Explore = () => {
 
                 <motion.div
                     layout
-                    data-expanded={isExploreRoute}
+                    data-expanded={isChangeRoute}
                     className={cn(
                         "rounded-4xl drop-shadow-lg",
                         "items-center justify-center bg-gradient-to-b from-midnight-900 to-midnight-800",
                         "flex size-14 cursor-pointer transition-all duration-500",
-                        isExploreRoute && "w-screen h-screen flex-col items-center cursor-default pt-10"
+                        isChangeRoute && "w-screen h-screen flex-col items-center cursor-default pt-10"
                     )}
                     onClick={() => setRouter("inSquare")}
                 >
                     <AnimatePresence>
-                        {isExploreRoute && (
-                            <ExploreSubjects />
+                        {isChangeRoute && (
+                            <ChangeSubjects />
                         )}
                     </AnimatePresence>
                     <div className={cn(
                         "flex flex-col items-center justify-center gap-2",
-                        isExploreRoute && "bottom-32 absolute z-20 cursor-pointer"
+                        isChangeRoute && "bottom-32 absolute z-20 cursor-pointer"
                     )}
                         onClick={(e) => {
-                            if (isExploreRoute) {
+                            if (isChangeRoute) {
                                 setRouter("inSquare")
                                 e.stopPropagation()
                             }
                         }
                         }
                     >
-                        <TelescopeIcon
-                        />
+                        <Replace/>
                     </div>
                 </motion.div>
             </motion.div>

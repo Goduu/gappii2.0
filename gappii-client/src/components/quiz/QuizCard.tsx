@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef } from "react"
 import { motion, useTransform, useSpring, useAnimation, AnimatePresence } from "motion/react"
-import { DraggableCircle } from "./DraggableCircle"
+import { DraggableSquare } from "./DraggableSquare"
 import { OptionCard } from "./OptionCard"
 import { QuizQuestion } from "./types"
 import { ChevronLeft, ChevronRight, Grab } from "lucide-react"
@@ -115,9 +115,7 @@ export function SessionCard({ currentQuestion, onAnswer }: QuizCardProps) {
             x: position,
             transition: { type: 'spring', stiffness: 500, damping: 25 }
         }).finally(() => {
-            console.log("finally")
             if (isMounted.current) {
-                console.log("isMounted.current")
                 onAnswer(correct)
             }
 
@@ -224,7 +222,7 @@ export function SessionCard({ currentQuestion, onAnswer }: QuizCardProps) {
 
     // Get background color based on answer
     const getBackgroundColor = () => {
-        if (!hasAnswered) return "linear-gradient(180deg, oklch(0.21 0.034 264.665) 0%, oklch(0.13 0.028 261.692) 100%)"
+        if (!hasAnswered) return ""
 
         return isCorrect
             ? "linear-gradient(180deg, oklch(0.527 0.154 150.069) 0%, oklch(0.266 0.065 152.934) 100%)"
@@ -250,13 +248,13 @@ export function SessionCard({ currentQuestion, onAnswer }: QuizCardProps) {
             </div>
 
             <div className="h-1/2 md:h-1/5 w-full flex flex-col gap-4 items-center justify-center">
-                <div className="relative h-[85px] flex items-center justify-center w-full bg-gray-900/70 rounded-xl">
+                <div className="relative h-[85px] flex items-center justify-center w-full rounded-4xl">
                     <div className="flex items-center justify-between w-full px-4 ">
                         <ChevronLeft className="size-8 text-white/20" />
                         <ChevronRight className="size-8 text-white/20" />
                     </div>
                     <div className="absolute">
-                        <DraggableCircle
+                        <DraggableSquare
                             xSpring={xSpring}
                             controls={controls}
                             colorTransform={colorTransform}
@@ -268,14 +266,14 @@ export function SessionCard({ currentQuestion, onAnswer }: QuizCardProps) {
                     </div>
                 </div>
 
-                <div className="text-white/70 text-center mt-4">
-                    <div className="opacity-75 text-sm flex flex-col items-center gap-2">
+                <div className="text-white/70 text-center pt-10">
+                    <div className="opacity-75 text-xs flex flex-col items-center">
                         <div className="items-center gap-2 hidden md:flex">
                             <ChevronLeft className="size-4" />
                             <Grab className="size-4" />
                             <ChevronRight className="size-4" />
                         </div>
-                        <div>
+                        <div className="select-none">
                             Drag the circle or use arrow keys to answer
                         </div>
                     </div>

@@ -1,12 +1,15 @@
 "use client"
 
 import HomePage from "./HomePage"
+import { InputContextProvider } from "./InputContext"
 import { RouterProvider } from "./RouterContext"
 
 export default function Home() {
     return (
         <RouterProvider>
-            <HomePage />
+            <InputContextProvider>
+                <HomePage />
+            </InputContextProvider>
         </RouterProvider>
     )
 } 

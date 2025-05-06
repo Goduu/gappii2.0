@@ -1,34 +1,14 @@
 import { cn } from "@/lib/utils"
 import { AnimatePresence, motion } from "motion/react"
-import { useRef } from "react"
 import OrbitingMenu from "./OrbitingMenu"
 import TheCircle from "./TheCircle"
-import { Route } from "../menuOptionsList"
 import { useSquareRouter } from "../RouterContext"
 
-type TheSquareProps = {
-    isOpen: boolean
-    onSelectOption: (option: Route) => void
-    setIsOpen: (isOpen: boolean) => void
-    setTextInput: (newTextInput: string) => void
-    handleBackspace: () => void
-    textInput: string
-    onEnter: () => void
-}
-
-export default function TheSquare({
-    setTextInput,
-    textInput,
-    onEnter,
-    handleBackspace,
-    onSelectOption
-}: TheSquareProps) {
+export default function TheSquare() {
     const { router, setRouter } = useSquareRouter()
-    const inputRef = useRef<HTMLInputElement>(null)
 
     const handleClick = () => {
         if (router === "home") {
-            inputRef.current?.focus()
             setRouter("inSquare")
         } if (router !== "inSquare") {
             setRouter("inSquare")
@@ -67,9 +47,8 @@ export default function TheSquare({
                     onClick={handleClick}
                 >
                     <AnimatePresence>
-                        {(router === "inSquare" || router === "explore") && (
+                        {router !== "home" && (
                             <OrbitingMenu
-                                onOptionHover={onSelectOption}
                                 pauseOnHover
                                 radius={50}
                             />
@@ -77,11 +56,6 @@ export default function TheSquare({
                     </AnimatePresence>
                     <div className="flex flex-col items-center justify-center gap-2">
                         <TheCircle
-                            inputRef={inputRef}
-                            setTextInput={setTextInput}
-                            textInput={textInput}
-                            onEnter={onEnter}
-                            handleBackspace={handleBackspace}
                         />
                     </div>
                 </motion.div>

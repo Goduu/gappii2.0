@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 /**
  * Props for the DraggableCircle component
  */
-interface DraggableCircleProps {
+interface DraggableSquareProps {
   /** Motion value for horizontal position */
   xSpring: MotionValue<number>;
   /** Animation controls for programmatic animations */
@@ -26,7 +26,7 @@ interface DraggableCircleProps {
   hasAnswered: boolean;
 }
 
-export function DraggableCircle({
+export function DraggableSquare({
   xSpring,
   controls,
   colorTransform,
@@ -34,7 +34,7 @@ export function DraggableCircle({
   correctAnswerPosition,
   handleDragEnd,
   hasAnswered
-}: DraggableCircleProps) {
+}: DraggableSquareProps) {
   console.log("correctAnswerPosition", correctAnswerPosition)
   // Determine if the correct answer is on the left side
   const isCorrectLeft = correctAnswerPosition === "left"
@@ -117,67 +117,72 @@ export function DraggableCircle({
 
   return (
     <motion.div
-      className="size-20 md:size-32 bg-gray-200 rounded-2xl md:rounded-4xl p-5 z-10 cursor-grab active:cursor-grabbing"
-      style={{ x: xSpring }}
-      animate={controls}
-      drag="x"
-      dragConstraints={dragBoundaries}
-      dragElastic={0.5}
-      onDragEnd={handleDragEnd}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      transition={{
-        type: "spring",
-        bounce: 0.25
-      }}
+      animate={{opacity: [0,1]}}
+      transition={{delay: 0.4, duration: 0.7}}
     >
-      {/* SVG containing the circle and answer indicators */}
-      <svg className="progress-icon" viewBox="0 0 50 50">
-        {/* Circle background */}
-        <motion.path
-          fill="none"
-          strokeWidth="5px"
-          stroke={hasAnswered ? colorTransform : "rgb(20, 0, 20)"}
-          d="M 0, 20 a 20, 20 0 1,0 40,0 a 20, 20 0 1,0 -40,0"
-          style={{
-            x: 5,
-            y: 5,
-          }}
-        />
+      <motion.div
+        className="size-20 md:size-32 bg-gray-200 rounded-2xl md:rounded-4xl p-5 z-10 cursor-grab active:cursor-grabbing"
+        style={{ x: xSpring }}
+        animate={controls}
+        drag="x"
+        dragConstraints={dragBoundaries}
+        dragElastic={0.5}
+        onDragEnd={handleDragEnd}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        transition={{
+          type: "spring",
+          bounce: 0.25
+        }}
+      >
+        {/* SVG containing the circle and answer indicators */}
+        <svg className="progress-icon" viewBox="0 0 50 50">
+          {/* Circle background */}
+          <motion.path
+            fill="none"
+            strokeWidth="5px"
+            stroke={hasAnswered ? colorTransform : "rgb(20, 0, 20)"}
+            d="M 0, 20 a 20, 20 0 1,0 40,0 a 20, 20 0 1,0 -40,0"
+            style={{
+              x: 5,
+              y: 5,
+            }}
+          />
 
-        {/* Checkmark for correct answer */}
-        <motion.path
-          id="checkmark"
-          fill="none"
-          strokeWidth="2"
-          stroke={hasAnswered ? colorTransform : "rgb(20, 0, 20)"}
-          d="M14,26 L 22,33 L 35,16"
-          strokeDasharray="0 1"
-          style={{ pathLength: hasAnswered ? checkmarkPathProgress : 0 }}
-        />
+          {/* Checkmark for correct answer */}
+          <motion.path
+            id="checkmark"
+            fill="none"
+            strokeWidth="2"
+            stroke={hasAnswered ? colorTransform : "rgb(20, 0, 20)"}
+            d="M14,26 L 22,33 L 35,16"
+            strokeDasharray="0 1"
+            style={{ pathLength: hasAnswered ? checkmarkPathProgress : 0 }}
+          />
 
-        {/* Diagonal line for neutral state */}
-        <motion.path
-          id="neutral"
-          fill="none"
-          strokeWidth="2"
-          stroke={hasAnswered ? colorTransform : "rgb(20, 0, 20)"}
-          d="M17,17 L33,33"
-          strokeDasharray="0 1"
-          style={{ pathLength: hasAnswered ? xMarkPathProgress : 0 }}
-        />
+          {/* Diagonal line for neutral state */}
+          <motion.path
+            id="neutral"
+            fill="none"
+            strokeWidth="2"
+            stroke={hasAnswered ? colorTransform : "rgb(20, 0, 20)"}
+            d="M17,17 L33,33"
+            strokeDasharray="0 1"
+            style={{ pathLength: hasAnswered ? xMarkPathProgress : 0 }}
+          />
 
-        {/* X mark for incorrect answer */}
-        <motion.path
-          id="xmark"
-          fill="none"
-          strokeWidth="2"
-          stroke={hasAnswered ? colorTransform : "gray"}
-          d="M33,17 L17,33"
-          strokeDasharray="0 1"
-          style={{ pathLength: hasAnswered ? xMarkPathProgress : 0 }}
-        />
-      </svg>
+          {/* X mark for incorrect answer */}
+          <motion.path
+            id="xmark"
+            fill="none"
+            strokeWidth="2"
+            stroke={hasAnswered ? colorTransform : "gray"}
+            d="M33,17 L17,33"
+            strokeDasharray="0 1"
+            style={{ pathLength: hasAnswered ? xMarkPathProgress : 0 }}
+          />
+        </svg>
+      </motion.div>
     </motion.div>
   )
 } 

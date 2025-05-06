@@ -11,9 +11,10 @@ type OrbitingItemsProps = {
     totalItems: number
     setLastHovered: (lastHovered: Route) => void
     lastHovered: Route
+    handleClick: (option: Route) => void
 }
 
-export default function OrbitingOption({ item, index, radius, totalItems, setLastHovered, lastHovered }: OrbitingItemsProps) {
+export default function OrbitingOption({ item, index, radius, totalItems, setLastHovered, lastHovered, handleClick }: OrbitingItemsProps) {
     const isDesktop = useMediaQuery("(min-width: 1024px)");
     const { router, setRouter } = useSquareRouter()
 
@@ -21,7 +22,7 @@ export default function OrbitingOption({ item, index, radius, totalItems, setLas
 
     return (
         <div
-            onClick={() => isDesktop ? setRouter(item.id) : setLastHovered(item.id)}
+            onClick={() => isDesktop ? handleClick(item.id) : setLastHovered(item.id)}
             className={cn(
                 "absolute flex size-14 items-center justify-center rounded-full bg-midnight-900 cursor-pointer",
                 lastHovered === item.id && "bg-midnight-800",

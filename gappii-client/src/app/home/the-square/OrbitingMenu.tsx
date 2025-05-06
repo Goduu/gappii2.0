@@ -5,6 +5,7 @@ import { Route, options } from "../menuOptionsList";
 import { capitalize } from "lodash";
 import { useSquareRouter } from "../RouterContext";
 import OrbitingOption from "./OrbitingOption";
+import { useInput } from "../InputContext";
 
 interface OrbitingItemsProps {
     /**
@@ -32,10 +33,6 @@ interface OrbitingItemsProps {
      */
     className?: string;
 
-    /**
-     * The function to call when an item is selected.
-     */
-    onOptionHover: (option: Route) => void;
 }
 
 export default function OrbitingMenu({
@@ -47,8 +44,16 @@ export default function OrbitingMenu({
 }: OrbitingItemsProps) {
     const [lastHovered, setLastHovered] = useState<Route>("continue");
     const { router, setRouter } = useSquareRouter()
+    const { focusInput } = useInput()
 
     const isInSquare = router === "inSquare"
+
+    const handleClick = () => {
+        setRouter(lastHovered)
+        if (lastHovered === "new") {
+            focusInput()
+        }
+    }
 
     return (
         <motion.div
@@ -108,6 +113,7 @@ export default function OrbitingMenu({
                                 setLastHovered={setLastHovered}
                                 totalItems={options.length}
                                 radius={radius}
+                                handleClick={handleClick}
                             />
                         );
                     })}
@@ -118,7 +124,7 @@ export default function OrbitingMenu({
                         "group-hover:border-8 group-hover:border-gray-200",
                         "flex items-center justify-center"
                     )}
-                        onClick={() => setRouter(lastHovered)}
+                        onClick={handleClick}
                     >
                         <div className="flex items-center justify-center ">
                             <motion.div
@@ -131,7 +137,10 @@ export default function OrbitingMenu({
                                     repeat: isInSquare ? Infinity : 0,
                                     repeatType: "loop"
                                 }}
-                                className="text-white font-black text-xl flex items-center justify-center"
+                                className={cn(
+                                    "text-white font-black text-xl flex items-center justify-center",
+                                    !isInSquare && "opacity-0"
+                                )}
                             >
                                 {capitalize(lastHovered)}
                             </motion.div>

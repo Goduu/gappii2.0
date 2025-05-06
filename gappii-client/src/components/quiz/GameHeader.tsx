@@ -10,7 +10,7 @@ interface GameHeaderProps {
 
 export function GameHeader({ score, timeRemaining }: GameHeaderProps) {
   return (
-    <div className="relative flex justify-between items-center p-4 bg-slate-900 text-white">
+    <div className="relative flex justify-between items-center p-4">
       <div className="text-xl font-bold">
         Score: {score}
       </div>
