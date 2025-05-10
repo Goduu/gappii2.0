@@ -3,9 +3,10 @@
 import { motion } from "motion/react"
 import { QuizOption } from "./types"
 import { cn } from "@/lib/utils";
+import { DeepPartial } from "ai";
 
 interface OptionCardProps {
-  option: QuizOption;
+  option: DeepPartial<QuizOption> | undefined;
   position: 'left' | 'right';
 }
 
@@ -14,16 +15,16 @@ export function OptionCard({ option, position }: OptionCardProps) {
 
   return (
     <motion.div
-      key={`${position}-${option.id}`}
+      key={`${position}-${option?.id}`}
       className={cn(
         "text-white text-sm md:text-xl font-bold w-full h-20 flex items-center justify-center",
-        "p-3 md:p-6 bg-white/10 rounded-4xl")}
+        "p-3 md:p-6 bg-white/10 rounded-4xl select-none")}
       initial={{ x: isLeft ? -100 : 100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: isLeft ? -100 : 100, opacity: 0 }}
       transition={{ type: 'spring', damping: 20 }}
     >
-      {option.text}
+      {option?.text}
     </motion.div>
   )
 } 

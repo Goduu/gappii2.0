@@ -1,4 +1,3 @@
-import { Play, Plus, Replace, Telescope } from "lucide-react"
 import { ReactNode } from "react"
 import { Explore } from "./the-square/explore/Explore"
 import { New } from "./the-square/new/New"
@@ -8,7 +7,7 @@ import { Continue } from "./the-square/continue/Continue"
 export type Option = {
     id: Route,
     name: string,
-    icon: ReactNode,
+    component: ReactNode,
 }
 
 
@@ -16,32 +15,33 @@ export const options: Option[] = [
     {
         id: "continue",
         name: "Continue",
-        icon: <Continue />
+        component: <Continue />
     },
     {
         id: "change",
         name: "Change Topic",
-        icon: <Change />
+        component: <Change />
     },
     {
         id: "explore",
         name: "Explore",
-        icon: <Explore />
+        component: <Explore />
     },
     {
         id: "new",
         name: "New",
-        icon: <New />
+        component: <New />
     }
 ]
 
-export type Route = "home" | "inSquare" | "continue" | "new" | "change" | "explore"
+export type Route = "home" | "inSquare" | "continue" | "new" | "add-lesson" | "change" | "explore"
 
 export const titleOptions: Record<Route, string> = {
     "home": "Home",
     "inSquare": "In Square",
     "continue": "Continue",
     "new": "New",
+    "add-lesson": "Add Lesson",
     "change": "Change",
     "explore": "Explore",
 }

@@ -1,67 +1,35 @@
 import { TelescopeIcon } from "@/components/ui/telescope"
-import { AnimatePresence, motion } from "framer-motion"
-import { cn } from "@/lib/utils"
+import { AnimatePresence } from "framer-motion"
 import { useSquareRouter } from "../../RouterContext"
 import { ExploreSubjects } from "./ExploreSubjects"
+import { TextAnimate } from "@/components/magicui/text-animate"
+import { PageWrapper } from "../PageWrapper"
 
 
 export const Explore = () => {
-    const { router, setRouter } = useSquareRouter()
+    const { router } = useSquareRouter()
 
     const isExploreRoute = router === "explore"
 
     return (
-        <div className={cn(
-            "z-20 flex gap-10 justify-center transition-all duration-300",
-            isExploreRoute && "bottom-0"
-        )}>
-            <motion.div
-                className="drop-shadow-lg"
-                animate={{
-                    scale: isExploreRoute ? [1] : [1, 1, 0.9, 0.80, 1, 1, 0.95, 1, 1, 1, 1, 1,],
-                }}
-                transition={{
-                    duration: 5.5,
-                    repeat: Infinity,
-                    ease: "linear",
-                    repeatType: "loop"
-                }}>
-
-                <motion.div
-                    layout
-                    data-expanded={isExploreRoute}
-                    className={cn(
-                        "rounded-4xl drop-shadow-lg",
-                        "items-center justify-center bg-gradient-to-b from-midnight-900 to-midnight-800",
-                        "flex size-14 cursor-pointer transition-all duration-500",
-                        isExploreRoute && "w-screen h-screen flex-col items-center cursor-default pt-10"
-                    )}
-                    onClick={() => setRouter("inSquare")}
-                >
-                    <AnimatePresence>
-                        {isExploreRoute && (
-                            <ExploreSubjects />
-                        )}
-                    </AnimatePresence>
-                    <div className={cn(
-                        "flex flex-col items-center justify-center gap-2",
-                        isExploreRoute && "bottom-32 absolute z-20 cursor-pointer"
-                    )}
-                        onClick={(e) => {
-                            if (isExploreRoute) {
-                                setRouter("inSquare")
-                                e.stopPropagation()
-                            }
-                        }
-                        }
-                    >
-                        <TelescopeIcon
-                        />
-                    </div>
-                </motion.div>
-            </motion.div>
-        </div >
-
+        <PageWrapper
+            icon={<TelescopeIcon />}
+            isThisRoute={isExploreRoute}
+            showEverything={true}
+        >
+            <>
+                <div className="flex flex-col gap-2 items-center justify-center">
+                    <TextAnimate animation="slideLeft" by="character" className="text-xl md:text-3xl font-black w-80 md:w-fit" duration={0.7} delay={0.4}>
+                        Explore
+                    </TextAnimate>
+                    <TextAnimate animation="slideLeft" by="character" className="text-xl md:text-3xl font-black w-80 md:w-fit" duration={0.7} delay={0.4}>
+                        what the community is learning
+                    </TextAnimate>
+                </div>
+                <AnimatePresence>
+                    <ExploreSubjects />
+                </AnimatePresence>
+            </>
+        </PageWrapper>
     )
 }
-

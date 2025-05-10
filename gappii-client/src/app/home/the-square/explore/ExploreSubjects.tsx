@@ -1,40 +1,58 @@
-import { BorderBeam } from "@/components/magicui/border-beam"
-import { Card, CardContent } from "@/components/ui/card"
-import { motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
+import { useInput } from "../../InputContext"
+import { SubjectDialog } from "../subject/SubjectDialog"
+import { cn } from "@/lib/utils"
 
 export const ExploreSubjects = () => {
+    const { inputValue } = useInput()
+
+    const filteredSubjects = exampleSubjects.filter(item =>
+        inputValue.length === 0 ||
+        item.subject.toLowerCase().includes(inputValue.toLowerCase())
+        || item.topics.some(topic => topic.toLowerCase().includes(inputValue.toLowerCase())))
+
+    // Animation configuration
+    const listAnimation = {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        exit: { opacity: 0 },
+    };
+
+    const itemAnimation = {
+        initial: { scale: 0.96, opacity: 0 },
+        animate: { scale: 1, opacity: 1 },
+        exit: { scale: 0.96, opacity: 0 },
+        transition: { type: "spring", stiffness: 300, damping: 30 }
+    };
+
     return (
-        <div className="flex items-center justify-center gap-4 w-96 flex-wrap">
-            {exampleSubjects.map((item, index) => (
-                <motion.div key={item.subject}
-                    className="w-40"
-                    animate={{
-                        opacity: [0, 1],
-                        y: [-430, 0],
-                        x: [200, 0]
-                    }}
-                    transition={{
-                        duration: 0.5,
-                        delay: index * 0.05,
-                        ease: "easeInOut",
-                    }}>
-                    <Card
-                        className="relative bg-inherit text-white max-w-40 border-teal-800 cursor-pointer"
+        <motion.ul
+            layout
+            className={cn(
+                "grid auto-cols-auto gap-2 auto-rows-auto items-center justify-center",
+                "w-[90vw] md:w-[65vw] lg:w-[70vw] md:px-20 h-80 overflow-y-auto p-0 grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+            )}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={listAnimation}
+        >
+            <AnimatePresence initial={false} mode="popLayout">
+                {filteredSubjects.map((item, index) => (
+                    <motion.li
+                        key={item.subject}
+                        layout
+                        initial="initial"
+                        animate="animate"
+                        exit="exit"
+                        variants={itemAnimation}
+                        whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
                     >
-                        <CardContent>
-                            <div className="text-sm font-black">
-                                {item.subject}
-                            </div>
-                            <div className="text-xs flex gap-1 truncate text-ellipsis">
-                                {item.topics.join(", ")}
-                            </div>
-                        </CardContent>
-                        <BorderBeam delay={index * 0.5} />
-                    </Card>
-                </motion.div>
-            ))
-            }
-        </div>
+                        <SubjectDialog subject={item.subject} topics={item.topics} index={index} />
+                    </motion.li>
+                ))}
+            </AnimatePresence>
+        </motion.ul>
     )
 }
 
@@ -63,5 +81,29 @@ const exampleSubjects = [
     {
         subject: "Music from Bach for Piano",
         topics: ["Allegro", "Andante", "Presto", "Allegro", "Andante", "Presto"]
+    },
+    {
+        subject: "Religion",
+        topics: ["Christianity", "Islam", "Buddhism", "Hinduism", "Judaism", "Christianity", "Islam", "Buddhism", "Hinduism", "Judaism"]
+    },
+    {
+        subject: "History",
+        topics: ["World War II", "World War I", "Ancient History", "Medieval History", "Modern History"]
+    },
+    {
+        subject: "Art",
+        topics: ["Painting", "Sculpture", "Architecture", "Painting", "Sculpture", "Architecture"]
+    },
+    {
+        subject: "Physics",
+        topics: ["Quantum Mechanics", "Relativity", "Quantum Mechanics", "Relativity", "Quantum Mechanics", "Relativity"]
+    },
+    {
+        subject: "Chemistry",
+        topics: ["Molecules", "H2O", "Chemical Reactions", "Chemical Interactions", "Chemical Bonds"]
+    },
+    {
+        subject: "Biology",
+        topics: ["Cellular Biology", "Genetics", "Molecular Biology", "Evolution", "Biochemistry"]
     }
 ]

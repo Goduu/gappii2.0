@@ -19,7 +19,7 @@ interface DraggableSquareProps {
     right: number;
   };
   /** Which side contains the correct answer */
-  correctAnswerPosition: "left" | "right";
+  correctAnswerPosition: "left" | "right" | "all";
   /** Callback fired when drag ends */
   handleDragEnd: () => void;
   /** Whether the answer has been answered */
@@ -35,8 +35,8 @@ export function DraggableSquare({
   handleDragEnd,
   hasAnswered
 }: DraggableSquareProps) {
-  console.log("correctAnswerPosition", correctAnswerPosition)
   // Determine if the correct answer is on the left side
+  const isAllCorrect = correctAnswerPosition === "all"
   const isCorrectLeft = correctAnswerPosition === "left"
 
   // Responsive thresholds based on screen size
@@ -82,9 +82,12 @@ export function DraggableSquare({
   // Animation control for the success checkmark - only show when moving toward correct answer
   const checkmarkPathProgress = useTransform(
     xSpring,
-    isCorrectLeft
-      ? [-thresholds.fullAnimation, -thresholds.animationThreshold, thresholds.animationThreshold, thresholds.fullAnimation]
-      : [-thresholds.fullAnimation, -thresholds.animationThreshold, thresholds.animationThreshold, thresholds.fullAnimation],
+    isAllCorrect
+      ? [1, 0, 0, 1]
+      :
+      isCorrectLeft
+        ? [-thresholds.fullAnimation, -thresholds.animationThreshold, thresholds.animationThreshold, thresholds.fullAnimation]
+        : [-thresholds.fullAnimation, -thresholds.animationThreshold, thresholds.animationThreshold, thresholds.fullAnimation],
     isCorrectLeft
       ? [1, 0, 0, 0]
       : [0, 0, 0, 1]
@@ -93,9 +96,12 @@ export function DraggableSquare({
   // Animation control for the error X mark - only show when moving toward incorrect answer
   const xMarkPathProgress = useTransform(
     xSpring,
-    isCorrectLeft
-      ? [-thresholds.fullAnimation, -thresholds.animationThreshold, thresholds.animationThreshold, thresholds.fullAnimation]
-      : [-thresholds.fullAnimation, -thresholds.animationThreshold, thresholds.animationThreshold, thresholds.fullAnimation],
+    isAllCorrect
+      ? [0, 0, 0, 0]
+      :
+      isCorrectLeft
+        ? [-thresholds.fullAnimation, -thresholds.animationThreshold, thresholds.animationThreshold, thresholds.fullAnimation]
+        : [-thresholds.fullAnimation, -thresholds.animationThreshold, thresholds.animationThreshold, thresholds.fullAnimation],
     isCorrectLeft
       ? [0, 0, 0, 1]
       : [1, 0, 0, 0]
@@ -117,8 +123,8 @@ export function DraggableSquare({
 
   return (
     <motion.div
-      animate={{opacity: [0,1]}}
-      transition={{delay: 0.4, duration: 0.7}}
+      animate={{ opacity: [0, 1] }}
+      transition={{ delay: 0.4, duration: 0.7 }}
     >
       <motion.div
         className="size-20 md:size-32 bg-gray-200 rounded-2xl md:rounded-4xl p-5 z-10 cursor-grab active:cursor-grabbing"

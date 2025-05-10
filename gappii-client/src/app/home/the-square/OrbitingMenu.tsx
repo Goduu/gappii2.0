@@ -6,33 +6,14 @@ import { capitalize } from "lodash";
 import { useSquareRouter } from "../RouterContext";
 import OrbitingOption from "./OrbitingOption";
 import { useInput } from "../InputContext";
+import { useMediaQuery } from "usehooks-ts";
 
 interface OrbitingItemsProps {
-    /**
-     * The radius of the circle in percentage, relative to the container.
-     */
     radius: number;
-
-    /**
-     * Pause the animation when the parent element is hovered.
-     */
     pauseOnHover?: boolean;
-
-    /**
-     * Class name for the background element.
-     */
     backgroundClassName?: string;
-
-    /**
-     * Class name for the container element.
-     */
     containerClassName?: string;
-
-    /**
-     * Additional classes for the item container.
-     */
     className?: string;
-
 }
 
 export default function OrbitingMenu({
@@ -43,15 +24,18 @@ export default function OrbitingMenu({
     className,
 }: OrbitingItemsProps) {
     const [lastHovered, setLastHovered] = useState<Route>("continue");
-    const { router, setRouter } = useSquareRouter()
+    const { setRouter, isInSquareRoute } = useSquareRouter()
     const { focusInput } = useInput()
 
-    const isInSquare = router === "inSquare"
+    const isDesktop = useMediaQuery("(min-width: 1024px)")
 
     const handleClick = () => {
         setRouter(lastHovered)
         if (lastHovered === "new") {
-            focusInput()
+            console.log("focusing")
+            setTimeout(() => {
+                focusInput()
+            }, 50)
         }
     }
 
@@ -86,19 +70,17 @@ export default function OrbitingMenu({
                 />
                 <motion.div
                     animate={{
-                        rotate: isInSquare ? [0, 360] : 0,
+                        rotate: isInSquareRoute ? [0, 360] : 0,
                     }}
                     transition={{
-                        duration: isInSquare ? 45 : 0,
+                        duration: isInSquareRoute ? 45 : 0,
                         ease: "linear",
-                        repeat: isInSquare ? Infinity : 0,
+                        repeat: isInSquareRoute ? Infinity : 0,
                         repeatType: "loop"
                     }}
                     className={cn(
                         "relative flex h-64 w-64 items-center justify-center",
-                        {
-                            "group-hover:[animation-play-state:paused]": pauseOnHover,
-                        },
+                        pauseOnHover && "group-hover:[animation-play-state:paused]",
                         className,
                     )}
                 >
@@ -117,37 +99,49 @@ export default function OrbitingMenu({
                             />
                         );
                     })}
+                    {isInSquareRoute &&
+                        < motion.div
+                            animate={{
+                                scale: isDesktop ? 1 : [1, 1.05, 1, 1, 1, 1.1, 1],
+                            }}
+                            transition={{
+                                duration: 3.5,
+                                ease: "linear",
+                                repeat: Infinity,
+                                repeatType: "loop"
+                            }}
+                            className={cn(
+                                "absolute cursor-pointer h-1/2 w-1/2 rounded-full",
+                                "border-8 border-gray-200 bg-gradient-to-b from-midnight-900 to-midnight-950",
+                                "group-hover:border-8 group-hover:border-gray-200",
+                                "flex items-center justify-center"
+                            )}
+                            onClick={handleClick}
+                        >
+                            <div className="flex items-center justify-center ">
+                                <motion.div
+                                    animate={{
+                                        rotate: isInSquareRoute ? [0, -360] : 0,
+                                    }}
+                                    transition={{
+                                        duration: isInSquareRoute ? 45 : 0,
+                                        ease: "linear",
+                                        repeat: isInSquareRoute ? Infinity : 0,
+                                        repeatType: "loop"
+                                    }}
+                                    className={cn(
+                                        "text-white font-black text-xl flex items-center justify-center select-none",
+                                        !isInSquareRoute && "opacity-0",
 
-                    <div className={cn(
-                        "absolute cursor-pointer h-1/2 w-1/2 rounded-full",
-                        "border-8 border-gray-200 bg-gradient-to-b from-midnight-900 to-midnight-950",
-                        "group-hover:border-8 group-hover:border-gray-200",
-                        "flex items-center justify-center"
-                    )}
-                        onClick={handleClick}
-                    >
-                        <div className="flex items-center justify-center ">
-                            <motion.div
-                                animate={{
-                                    rotate: isInSquare ? [0, -360] : 0,
-                                }}
-                                transition={{
-                                    duration: isInSquare ? 45 : 0,
-                                    ease: "linear",
-                                    repeat: isInSquare ? Infinity : 0,
-                                    repeatType: "loop"
-                                }}
-                                className={cn(
-                                    "text-white font-black text-xl flex items-center justify-center",
-                                    !isInSquare && "opacity-0"
-                                )}
-                            >
-                                {capitalize(lastHovered)}
-                            </motion.div>
-                        </div>
-                    </div>
+                                    )}
+                                >
+                                    {capitalize(lastHovered)}
+                                </motion.div>
+                            </div>
+                        </motion.div>
+                    }
                 </motion.div>
-            </div>
-        </motion.div>
+            </div >
+        </motion.div >
     );
 }

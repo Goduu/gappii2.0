@@ -16,9 +16,7 @@ type OrbitingItemsProps = {
 
 export default function OrbitingOption({ item, index, radius, totalItems, setLastHovered, lastHovered, handleClick }: OrbitingItemsProps) {
     const isDesktop = useMediaQuery("(min-width: 1024px)");
-    const { router, setRouter } = useSquareRouter()
-
-    const isInSquare = router === "inSquare"
+    const { router, isInSquareRoute } = useSquareRouter()
 
     return (
         <div
@@ -28,7 +26,7 @@ export default function OrbitingOption({ item, index, radius, totalItems, setLas
                 lastHovered === item.id && "bg-midnight-800",
                 router === item.id && "z-10"
             )}
-            style={isInSquare ? calculateItemStyle({
+            style={isInSquareRoute ? calculateItemStyle({
                 index,
                 radius,
                 totalItems,
@@ -38,16 +36,16 @@ export default function OrbitingOption({ item, index, radius, totalItems, setLas
             <motion.div
                 className="relative items-center justify-center"
                 animate={{
-                    rotate: isInSquare ? [0, -360] : 0,
+                    rotate: isInSquareRoute ? [0, -360] : 0,
                 }}
                 transition={{
-                    duration: isInSquare ? 45 : 0,
+                    duration: isInSquareRoute ? 45 : 0,
                     ease: "linear",
-                    repeat: isInSquare ? Infinity : 0,
+                    repeat: isInSquareRoute ? Infinity : 0,
                     repeatType: "loop"
                 }}
             >
-                {item.icon}
+                {item.component}
             </motion.div>
         </div>
     )

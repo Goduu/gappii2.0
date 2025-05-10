@@ -3,19 +3,25 @@ import { AnimatePresence, motion } from "motion/react"
 import OrbitingMenu from "./OrbitingMenu"
 import TheCircle from "./TheCircle"
 import { useSquareRouter } from "../RouterContext"
+import BackStripe from "../BackStripe"
 
 export default function TheSquare() {
     const { router, setRouter } = useSquareRouter()
 
     const handleClick = () => {
         if (router === "home") {
+            console.log("home")
             setRouter("inSquare")
-        } if (router !== "inSquare") {
+        } else if (router === "continue") {
+            return;
+        } else if (router !== "inSquare") {
+            console.log("inSquare")
             setRouter("inSquare")
         }
     }
 
     const isInSquare = router !== "home"
+    const isContinueRoute = router === "continue"
 
     return (
         <div className={cn(
@@ -39,10 +45,11 @@ export default function TheSquare() {
                     layout
                     data-expanded={isInSquare}
                     className={cn(
-                        "rounded-4xl drop-shadow-lg",
+                        "rounded-4xl drop-shadow-lg relative",
                         "items-center justify-center bg-gradient-to-b from-midnight-950 to-midnight-800",
                         "flex size-32 cursor-pointer transition-all duration-500",
-                        isInSquare && "w-screen h-screen items-end cursor-default"
+                        isInSquare && "w-screen h-screen items-end cursor-default",
+                        isContinueRoute && "cursor-grab"
                     )}
                     onClick={handleClick}
                 >
@@ -58,6 +65,7 @@ export default function TheSquare() {
                         <TheCircle
                         />
                     </div>
+                    <BackStripe routesToHide={["home", "inSquare"]} route="inSquare" />
                 </motion.div>
             </motion.div>
         </div >

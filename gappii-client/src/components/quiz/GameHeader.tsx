@@ -1,5 +1,7 @@
 "use client"
 
+import { useSquareRouter } from "@/app/home/RouterContext";
+import { cn } from "@/lib/utils";
 import { Home } from "lucide-react";
 import Link from "next/link";
 
@@ -9,16 +11,22 @@ interface GameHeaderProps {
 }
 
 export function GameHeader({ score, timeRemaining }: GameHeaderProps) {
+
+  const { setRouter } = useSquareRouter()
+
   return (
-    <div className="relative flex justify-between items-center p-4">
+    <div className="relative flex justify-between items-center p-4 w-full">
       <div className="text-xl font-bold">
         Score: {score}
       </div>
-      <Link href="/home" className="relative group size-16 rounded-4xl border-8 border-white/10 hover:border-white transition-all duration-200 cursor-pointer items-center justify-center" >
-        <div className="absolute opacity-0 group-hover:opacity-100 transition-all duration-500 font-bold text-3xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <Home />
-        </div>
-      </Link>
+      <div className={cn(
+        "absolute opacity-0 group-hover:opacity-100 transition-all duration-500",
+        "font-bold text-3xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer",
+        "border-4 border-white rounded-4xl p-3"
+      )}
+        onClick={() => setRouter("inSquare")}>
+        <Home />
+      </div>
       <div className={`text-xl font-bold ${timeRemaining <= 10 ? 'text-red-500' : ''}`}>
         Time: {timeRemaining}s
       </div>
