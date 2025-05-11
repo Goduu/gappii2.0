@@ -24,7 +24,7 @@ export default function OrbitingOption({ item, index, radius, totalItems, setLas
             className={cn(
                 "absolute flex size-14 items-center justify-center rounded-full bg-midnight-900 cursor-pointer",
                 lastHovered === item.id && "bg-midnight-800",
-                router === item.id && "z-10"
+                item.routesOpen.includes(router) && "z-10 bg-none"
             )}
             style={isInSquareRoute ? calculateItemStyle({
                 index,

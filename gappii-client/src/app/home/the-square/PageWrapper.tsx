@@ -3,15 +3,15 @@ import { cn } from "@/lib/utils"
 import { ReactNode } from "react"
 import { useSquareRouter } from "../RouterContext"
 
-
 type PageWrapperProps = {
     children: ReactNode
     icon: ReactNode
     isThisRoute: boolean
     showEverything: boolean
 }
+
 export const PageWrapper = ({ children, icon, isThisRoute, showEverything }: PageWrapperProps) => {
-    const { setRouter, isInSquareRoute } = useSquareRouter()
+    const { isInSquareRoute } = useSquareRouter()
 
     if (!showEverything) {
         return
@@ -37,44 +37,41 @@ export const PageWrapper = ({ children, icon, isThisRoute, showEverything }: Pag
                     {isThisRoute &&
                         <motion.div
                             layout
+                            initial={{ opacity: 0.5, scale: 0 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: [1, 0.4, 0] }}
                             className={cn(
                                 "flex flex-col w-screen h-screen",
                                 "items-center justify-center pt-10",
                                 "bg-gradient-to-b from-midnight-900 to-midnight-800",
-                                "rounded-4xl drop-shadow-lg"
+                                "rounded-4xl drop-shadow-lg cursor-default"
                             )}
+                            onClick={e => e.stopPropagation()}
                         >
                             {children}
                         </motion.div>
                     }
-                </AnimatePresence>
-                {isInSquareRoute &&
-                    <motion.div
-                        layout
-                        data-expanded={isThisRoute}
-                        className={cn(
-                            "rounded-4xl drop-shadow-lg",
-                            "items-center justify-center bg-gradient-to-b from-midnight-900 to-midnight-800",
-                            "flex size-14 cursor-pointer transition-all duration-500",
-                            isThisRoute && "w-screen h-screen flex-col items-center cursor-default pt-10"
-                        )}
-                        onClick={() => setRouter("inSquare")}
-                    >
-                        <div className={cn(
-                            "flex flex-col items-center justify-center gap-2",
-                            isThisRoute && "bottom-32 absolute z-20 cursor-pointer"
-                        )}
-                            onClick={(e) => {
-                                if (isThisRoute) {
-                                    setRouter("inSquare")
-                                    e.stopPropagation()
-                                }
-                            }}
+                    {isInSquareRoute &&
+                        <motion.div
+                            layout
+                            data-expanded={isThisRoute}
+                            animate={{ opacity: [0, 1], scale: 1 }}
+                            className={cn(
+                                "rounded-4xl drop-shadow-lg",
+                                "items-center justify-center bg-gradient-to-b from-midnight-900 to-midnight-800",
+                                "flex size-14 cursor-pointer transition-all duration-500",
+                                isThisRoute && "w-screen h-screen flex-col items-center cursor-default pt-10"
+                            )}
                         >
-                            {icon}
-                        </div>
-                    </motion.div>
-                }
+                            <div className={cn(
+                                "flex flex-col items-center justify-center gap-2",
+                                isThisRoute && "bottom-32 absolute z-20 cursor-pointer"
+                            )}>
+                                {icon}
+                            </div>
+                        </motion.div>
+                    }
+                </AnimatePresence>
             </motion.div>
         </div>
     )

@@ -32,7 +32,6 @@ export default function OrbitingMenu({
     const handleClick = () => {
         setRouter(lastHovered)
         if (lastHovered === "new") {
-            console.log("focusing")
             setTimeout(() => {
                 focusInput()
             }, 50)

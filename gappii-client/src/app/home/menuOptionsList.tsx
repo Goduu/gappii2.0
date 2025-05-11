@@ -8,6 +8,7 @@ export type Option = {
     id: Route,
     name: string,
     component: ReactNode,
+    routesOpen: Route[],
 }
 
 
@@ -15,21 +16,25 @@ export const options: Option[] = [
     {
         id: "continue",
         name: "Continue",
+        routesOpen: ["add-lesson", "continue"],
         component: <Continue />
     },
     {
         id: "change",
         name: "Change Topic",
+        routesOpen: ["change"],
         component: <Change />
     },
     {
         id: "explore",
         name: "Explore",
+        routesOpen: ["explore"],
         component: <Explore />
     },
     {
         id: "new",
         name: "New",
+        routesOpen: ["new"],
         component: <New />
     }
 ]
