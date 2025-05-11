@@ -57,9 +57,9 @@ export const PageWrapper = ({ children, icon, isThisRoute, showEverything }: Pag
                             data-expanded={isThisRoute}
                             animate={{ opacity: [0, 1], scale: 1 }}
                             className={cn(
-                                "rounded-4xl drop-shadow-lg",
+                                "rounded-full drop-shadow-lg",
                                 "items-center justify-center bg-gradient-to-b from-midnight-900 to-midnight-800",
-                                "flex size-14 cursor-pointer transition-all duration-500",
+                                "flex size-16 cursor-pointer transition-all duration-500",
                                 isThisRoute && "w-screen h-screen flex-col items-center cursor-default pt-10"
                             )}
                         >

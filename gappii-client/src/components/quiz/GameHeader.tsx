@@ -12,7 +12,7 @@ interface GameHeaderProps {
 
 export function GameHeader({ score, timeRemaining }: GameHeaderProps) {
 
-  const { setRouter } = useSquareRouter()
+  const { changeRouter: setRouter } = useSquareRouter()
 
   return (
     <div className="relative flex justify-between items-center p-4 w-full">

@@ -77,7 +77,7 @@ export const useQuizCard = ({ currentQuestion, onAnswer }: QuizCardProps) => {
                 :
                 [
                     "rgb(159, 7, 18)", // Red left
-                    "rgb(20, 0, 20)", 
+                    "rgb(20, 0, 20)",
                     "rgb(3, 209, 0)",
                 ]
     )
@@ -112,8 +112,8 @@ export const useQuizCard = ({ currentQuestion, onAnswer }: QuizCardProps) => {
             x: position,
             transition: { type: 'spring', stiffness: 500, damping: 25 }
         }).finally(() => {
-            if (isMounted.current) {
-                onAnswer(correct)
+            if (isMounted.current && selectedOptionId) {
+                onAnswer(selectedOptionId)
             }
 
             controls.start({
@@ -152,8 +152,8 @@ export const useQuizCard = ({ currentQuestion, onAnswer }: QuizCardProps) => {
         }).then(() => {
             if (isMounted.current) {
                 // Only proceed to the next question if not dragging
-                if (!isDragging) {
-                    onAnswer(correct)
+                if (!isDragging && selectedOptionId) {
+                    onAnswer(selectedOptionId)
                 }
             }
         })
@@ -174,7 +174,11 @@ export const useQuizCard = ({ currentQuestion, onAnswer }: QuizCardProps) => {
             checkAnswer(currentPosition)
         } else if (hasAnswered && isCorrect !== null) {
             // If answer was already checked, proceed to next question
-            onAnswer(isCorrect)
+            const correctOption = options?.find(option => option?.id === correctOptionId)
+            const otherOption = options?.find(option => option?.id !== correctOptionId)
+            if (correctOption?.id && otherOption?.id) {
+                onAnswer(isCorrect ? correctOption.id : otherOption.id)
+            }
         } else {
             // Otherwise return to center
             xSpring.set(0) // Reset spring value

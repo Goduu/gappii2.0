@@ -22,7 +22,7 @@ export default function OrbitingOption({ item, index, radius, totalItems, setLas
         <div
             onClick={() => isDesktop ? handleClick(item.id) : setLastHovered(item.id)}
             className={cn(
-                "absolute flex size-14 items-center justify-center rounded-full bg-midnight-900 cursor-pointer",
+                "absolute flex size-16 items-center justify-center rounded-full bg-midnight-900 cursor-pointer",
                 lastHovered === item.id && "bg-midnight-800",
                 item.routesOpen.includes(router) && "z-10 bg-none"
             )}

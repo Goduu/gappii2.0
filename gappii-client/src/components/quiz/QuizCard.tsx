@@ -9,7 +9,7 @@ import { DeepPartial } from "ai"
 import { useQuizCard } from "./useQuizCard"
 export interface QuizCardProps {
     currentQuestion: DeepPartial<Activity>;
-    onAnswer: (isCorrect: boolean) => void;
+    onAnswer: (answerId: string) => void;
 }
 
 export function SessionCard({ currentQuestion, onAnswer }: QuizCardProps) {

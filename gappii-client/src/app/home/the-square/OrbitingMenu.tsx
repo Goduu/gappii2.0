@@ -24,7 +24,7 @@ export default function OrbitingMenu({
     className,
 }: OrbitingItemsProps) {
     const [lastHovered, setLastHovered] = useState<Route>("continue");
-    const { setRouter, isInSquareRoute } = useSquareRouter()
+    const { changeRouter: setRouter, isInSquareRoute } = useSquareRouter()
     const { focusInput } = useInput()
 
     const isDesktop = useMediaQuery("(min-width: 1024px)")

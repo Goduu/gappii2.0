@@ -24,7 +24,7 @@ interface InputContextProviderProps {
 export function InputContextProvider({ children }: InputContextProviderProps) {
     const [inputValue, setInputValue] = useState<string>('');
     const inputRef = useRef<HTMLInputElement>(null);
-    const { setRouter } = useSquareRouter()
+    const { changeRouter: setRouter } = useSquareRouter()
 
     const { submit, isLoading, object: activities } = experimental_useObject({
         api: "/api/understandSubject",

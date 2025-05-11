@@ -6,7 +6,7 @@ import { useSquareRouter } from "../RouterContext"
 import BackStripe from "../BackStripe"
 
 export default function TheSquare() {
-    const { router, setRouter } = useSquareRouter()
+    const { router, changeRouter: setRouter } = useSquareRouter()
 
     const handleClick = () => {
         if (router === "home") {

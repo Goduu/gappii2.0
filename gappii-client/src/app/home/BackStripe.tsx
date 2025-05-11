@@ -8,7 +8,7 @@ type BackStripeProps = {
     route: Route,
 }
 export default function BackStripe({ routesToHide, route }: BackStripeProps) {
-    const { router, setRouter } = useSquareRouter()
+    const { router, changeRouter: setRouter } = useSquareRouter()
 
     if (routesToHide.includes(router)) {
         return
@@ -24,6 +24,7 @@ export default function BackStripe({ routesToHide, route }: BackStripeProps) {
             )}>
                 <CornerLeftUp />
             </div>
+            {router}
         </div>
     )
 }

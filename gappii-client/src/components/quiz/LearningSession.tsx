@@ -2,29 +2,38 @@
 
 import { useState, useCallback, useEffect } from "react"
 import { AnimatePresence, motion } from "motion/react"
-import { Activity } from "./types"
+import { Activity, ActivitySchema } from "./types"
 import { SessionCard } from "./QuizCard"
 import { GameHeader } from "./GameHeader"
 import { GameOverScreen } from "./GameOverScreen"
 import { useInput } from "@/app/home/InputContext"
 import { DeepPartial } from "ai"
-import { TextAnimate } from "../magicui/text-animate"
+import { useLessonSession } from "@/app/home/LessonSessionContext"
+import { useRouterChange } from "@/app/home/RouterContext"
 
 export interface LearningSessionProps {
     initialTime: number;
     isAddLessonRoute: boolean;
 }
 
-export function LearningSession({ initialTime, isAddLessonRoute = false }: LearningSessionProps) {
+export function LearningSession({ initialTime, isAddLessonRoute }: LearningSessionProps) {
     // Game state
     const [score, setScore] = useState(0)
     const [timer, setTimer] = useState(initialTime)
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-    const [gameActive, setGameActive] = useState(!isAddLessonRoute)
+    const [gameActive, setGameActive] = useState(true)
     const [isAnswering, setIsAnswering] = useState(false)
     const { lesson } = useInput()
     const [currentQuestion, setCurrentQuestion] = useState<DeepPartial<Activity> | undefined>(lesson?.activities[0])
-    const [isIntroPlayed, setIsIntroPlayed] = useState(!isAddLessonRoute)
+
+    const { addAttempt, attempts: attempt } = useLessonSession()
+
+    // Watch for router changes
+    useRouterChange((newRoute, oldRoute) => {
+        if (oldRoute === "continue" || oldRoute === "add-lesson") {
+            resetGame()
+        }
+    });
 
     // Timer effect
     useEffect(() => {
@@ -53,14 +62,31 @@ export function LearningSession({ initialTime, isAddLessonRoute = false }: Learn
     }, [currentQuestionIndex, lesson])
 
     // Handle answer submission
-    const handleAnswer = useCallback((isCorrect: boolean) => {
-        if (isAnswering) return
+    const handleAnswer = useCallback((answerId: string) => {
+        if (isAnswering || !currentQuestion) return
+
+        // Check if currentQuestion is a complete Activity object
+        const validationResult = ActivitySchema.safeParse(currentQuestion)
+        if (!validationResult.success) {
+            console.warn('Current question is not a complete Activity object:', currentQuestion)
+            return
+        }
+
+        // At this point we know it's a complete Activity
+        const completeActivity = validationResult.data
 
         setIsAnswering(true)
+
+        const isCorrect = currentQuestion.correctOptionId === answerId
 
         if (isCorrect) {
             setScore(prev => prev + 1)
         }
+
+        addAttempt({
+            activity: completeActivity,
+            answer: isCorrect
+        })
 
         // Move to next question after a short delay
         setTimeout(() => {
@@ -91,53 +117,36 @@ export function LearningSession({ initialTime, isAddLessonRoute = false }: Learn
         }, 50)
     }
 
-    useEffect(() => {
-        if (isAddLessonRoute) {
-            setTimeout(() => {
-                setIsIntroPlayed(true)
-                setGameActive(true)
-            }, 5000)
-        }
-    }, [isAddLessonRoute])
-
     return (
-        <AnimatePresence>
-            {!isIntroPlayed ? (
-                <TextAnimate animation="slideLeft" by="character" className="text-2xl md:text-3xl font-black" duration={0.7} delay={0.4}>
-                    Let`s understand better what you want to learn
-                </TextAnimate>
-            )
-                :
-                <motion.div
-                    className="w-full h-full flex flex-col rounded-4xl mt-20"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 1 }}
-                >
-                    {/* Score and timer header */}
-                    <GameHeader score={score} timeRemaining={timer} />
+        <motion.div
+            className="w-full h-full flex flex-col rounded-4xl mt-20"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+        >
+            {/* Score and timer header */}
+            <GameHeader score={score} timeRemaining={timer} />
 
-                    {/* Main quiz area */}
-                    <div className="flex-1 flex items-center justify-center z-50 h-full">
-                        {gameActive && currentQuestion ? (
-                            <div className="w-full h-full flex items-center justify-center">
-                                <SessionCard
-                                    currentQuestion={currentQuestion}
-                                    onAnswer={handleAnswer}
-                                />
-                            </div>
-                        ) : (
-                            <AnimatePresence>
-                                <GameOverScreen
-                                    score={score}
-                                    totalQuestions={lesson?.activities.length || 0}
-                                    onReset={resetGame}
-                                />
-                            </AnimatePresence>
-                        )}
+            {/* Main quiz area */}
+            <div className="flex-1 flex items-center justify-center z-50 h-full">
+                {gameActive && currentQuestion ? (
+                    <div className="w-full h-full flex items-center justify-center">
+                        <SessionCard
+                            currentQuestion={currentQuestion}
+                            onAnswer={handleAnswer}
+                        />
                     </div>
-                </motion.div>
-            }
-        </AnimatePresence>
+                ) : (
+                    <AnimatePresence>
+                        <GameOverScreen
+                            score={score}
+                            totalQuestions={lesson?.activities.length || 0}
+                            onReset={resetGame}
+                            isAddLessonRoute={isAddLessonRoute}
+                        />
+                    </AnimatePresence>
+                )}
+            </div>
+        </motion.div>
     )
 } 

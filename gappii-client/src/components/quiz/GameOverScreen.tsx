@@ -1,15 +1,22 @@
 "use client"
 
+import { useSquareRouter } from "@/app/home/RouterContext";
 import { motion } from "motion/react"
-import Link from "next/link";
 
 interface GameOverScreenProps {
   score: number;
   totalQuestions: number;
   onReset: () => void;
+  isAddLessonRoute: boolean;
 }
 
-export function GameOverScreen({ score, totalQuestions, onReset }: GameOverScreenProps) {
+export function GameOverScreen({ score, totalQuestions, onReset, isAddLessonRoute }: GameOverScreenProps) {
+  const { changeRouter: setRouter } = useSquareRouter()
+
+  if(isAddLessonRoute){
+    
+  }
+
   return (
     <motion.div
       key="game-over"
@@ -21,17 +28,17 @@ export function GameOverScreen({ score, totalQuestions, onReset }: GameOverScree
       <h2 className="text-3xl font-bold mb-4">Game Over!</h2>
       <p className="text-xl mb-6">Your final score: {score}/{totalQuestions}</p>
       <div className="flex gap-4">
-        <Link
-          href="/home"
+        <button
           className="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-bold text-white transition-colors cursor-pointer"
+          onClick={() => setRouter("inSquare")}
         >
           Back to Home
-        </Link>
+        </button>
         <button
           onClick={onReset}
           className="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-bold text-white transition-colors cursor-pointer"
         >
-          Play Again
+          Continue Learning
         </button>
       </div>
     </motion.div>
