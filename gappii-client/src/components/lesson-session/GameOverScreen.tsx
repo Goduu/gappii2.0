@@ -2,6 +2,9 @@
 
 import { useSquareRouter } from "@/app/home/RouterContext";
 import { motion } from "motion/react"
+import { CreateSubjectTopicsAndActivitiesSchema } from "./types";
+import { useLessonSession } from "@/app/home/LessonSessionContext";
+import { experimental_useObject } from "@ai-sdk/react";
 
 interface GameOverScreenProps {
   score: number;
@@ -12,9 +15,30 @@ interface GameOverScreenProps {
 
 export function GameOverScreen({ score, totalQuestions, onReset, isAddLessonRoute }: GameOverScreenProps) {
   const { changeRouter: setRouter } = useSquareRouter()
+  const { attempts } = useLessonSession()
 
-  if(isAddLessonRoute){
-    
+
+  const { submit, isLoading, object } = experimental_useObject({
+    api: "/api/createSubjectTopicsAndActivities",
+    schema: CreateSubjectTopicsAndActivitiesSchema,
+    onFinish({ object }) {
+      if (object != null) {
+        console.log(object)
+      }
+    },
+    onError: () => {
+      console.log("You've been rate limited, please try again later!");
+    },
+  });
+
+  if (isAddLessonRoute) {
+    if (!isLoading) {
+      submit({
+        userPrompt: attempts.map(attempt =>
+          "question: " + attempt.activity.question 
+        ).join("\n")
+      })
+    }
   }
 
   return (

@@ -4,12 +4,12 @@ import { useState, useCallback, useEffect } from "react"
 import { AnimatePresence, motion } from "motion/react"
 import { Activity, ActivitySchema } from "./types"
 import { SessionCard } from "./QuizCard"
-import { GameHeader } from "./GameHeader"
 import { GameOverScreen } from "./GameOverScreen"
 import { useInput } from "@/app/home/InputContext"
 import { DeepPartial } from "ai"
 import { useLessonSession } from "@/app/home/LessonSessionContext"
 import { useRouterChange } from "@/app/home/RouterContext"
+import { LessonHeader } from "./LessonHeade"
 
 export interface LearningSessionProps {
     initialTime: number;
@@ -24,9 +24,9 @@ export function LearningSession({ initialTime, isAddLessonRoute }: LearningSessi
     const [gameActive, setGameActive] = useState(true)
     const [isAnswering, setIsAnswering] = useState(false)
     const { lesson } = useInput()
-    const [currentQuestion, setCurrentQuestion] = useState<DeepPartial<Activity> | undefined>(lesson?.activities[0])
+    const [currentActivity, setCurrentActivity] = useState<DeepPartial<Activity> | undefined>(lesson?.activities[0])
 
-    const { addAttempt, attempts: attempt } = useLessonSession()
+    const { addAttempt } = useLessonSession()
 
     // Watch for router changes
     useRouterChange((newRoute, oldRoute) => {
@@ -57,35 +57,25 @@ export function LearningSession({ initialTime, isAddLessonRoute }: LearningSessi
     useEffect(() => {
         const questions = lesson?.activities
         if (questions && currentQuestionIndex < questions.length) {
-            setCurrentQuestion(questions[currentQuestionIndex])
+            setCurrentActivity(questions[currentQuestionIndex])
         }
     }, [currentQuestionIndex, lesson])
 
     // Handle answer submission
-    const handleAnswer = useCallback((answerId: string) => {
-        if (isAnswering || !currentQuestion) return
-
-        // Check if currentQuestion is a complete Activity object
-        const validationResult = ActivitySchema.safeParse(currentQuestion)
-        if (!validationResult.success) {
-            console.warn('Current question is not a complete Activity object:', currentQuestion)
-            return
-        }
-
-        // At this point we know it's a complete Activity
-        const completeActivity = validationResult.data
+    const handleAnswer = useCallback((selectedOption: string) => {
+        if (isAnswering || !currentActivity) return
 
         setIsAnswering(true)
 
-        const isCorrect = currentQuestion.correctOptionId === answerId
 
-        if (isCorrect) {
-            setScore(prev => prev + 1)
+        const validationResult = ActivitySchema.safeParse(currentActivity)
+        if (!validationResult.success) {
+            console.warn('Current question is not a complete Activity object:', currentActivity)
+            return
         }
-
         addAttempt({
-            activity: completeActivity,
-            answer: isCorrect
+            activity: validationResult.data,
+            isCorrect: selectedOption === validationResult.data.correctOptionId
         })
 
         // Move to next question after a short delay
@@ -98,7 +88,7 @@ export function LearningSession({ initialTime, isAddLessonRoute }: LearningSessi
             }
             setIsAnswering(false)
         }, 500)
-    }, [currentQuestionIndex, lesson, isAnswering])
+    }, [isAnswering, currentActivity, addAttempt, lesson?.activities, currentQuestionIndex])
 
     // Reset game state
     const resetGame = () => {
@@ -108,7 +98,7 @@ export function LearningSession({ initialTime, isAddLessonRoute }: LearningSessi
         setScore(0)
         setTimer(initialTime)
         setCurrentQuestionIndex(0)
-        setCurrentQuestion(lesson?.activities[0])
+        setCurrentActivity(lesson?.activities[0])
         setIsAnswering(false)
 
         // Use setTimeout to ensure state updates are processed before reactivating
@@ -125,14 +115,14 @@ export function LearningSession({ initialTime, isAddLessonRoute }: LearningSessi
             transition={{ duration: 1 }}
         >
             {/* Score and timer header */}
-            <GameHeader score={score} timeRemaining={timer} />
+            <LessonHeader score={score} timeRemaining={timer} />
 
             {/* Main quiz area */}
             <div className="flex-1 flex items-center justify-center z-50 h-full">
-                {gameActive && currentQuestion ? (
+                {gameActive && currentActivity ? (
                     <div className="w-full h-full flex items-center justify-center">
                         <SessionCard
-                            currentQuestion={currentQuestion}
+                            currentQuestion={currentActivity}
                             onAnswer={handleAnswer}
                         />
                     </div>

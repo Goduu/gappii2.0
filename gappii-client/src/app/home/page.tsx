@@ -1,5 +1,6 @@
 "use client"
 
+import { DebugBox } from "@/components/debug/DebugBox"
 import HomePage from "./HomePage"
 import { InputContextProvider } from "./InputContext"
 import { LessonSessionProvider } from "./LessonSessionContext"
@@ -11,6 +12,9 @@ export default function Home() {
             <LessonSessionProvider>
                 <InputContextProvider>
                     <HomePage />
+                    {process.env.NODE_ENV === 'development' && (
+                        <DebugBox />
+                    )}
                 </InputContextProvider>
             </LessonSessionProvider>
         </RouterProvider>

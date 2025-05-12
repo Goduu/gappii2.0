@@ -1,12 +1,13 @@
 import { useAnimation, useSpring, useTransform } from "framer-motion"
 import { useCallback, useEffect, useRef, useState } from "react"
-import { QuizCardProps } from "./QuizCard"
+import { SessionCardProps } from "./QuizCard"
 
-export const useQuizCard = ({ currentQuestion, onAnswer }: QuizCardProps) => {
+export const useQuizCard = ({ currentQuestion, onAnswer }: SessionCardProps) => {
     const { question, options, correctOptionId } = currentQuestion
     const xSpring = useSpring(0, { stiffness: 400, damping: 30 })
     const controls = useAnimation()
     const [hasAnswered, setHasAnswered] = useState(false)
+    const [selectAnswerId, setSelectedAnswerId] = useState<string | null>(null)
     const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
     const [isDragging, setIsDragging] = useState(false)
 
@@ -113,6 +114,7 @@ export const useQuizCard = ({ currentQuestion, onAnswer }: QuizCardProps) => {
             transition: { type: 'spring', stiffness: 500, damping: 25 }
         }).finally(() => {
             if (isMounted.current && selectedOptionId) {
+                setSelectedAnswerId(selectedOptionId)
                 onAnswer(selectedOptionId)
             }
 
@@ -153,6 +155,7 @@ export const useQuizCard = ({ currentQuestion, onAnswer }: QuizCardProps) => {
             if (isMounted.current) {
                 // Only proceed to the next question if not dragging
                 if (!isDragging && selectedOptionId) {
+                    setSelectedAnswerId(selectedOptionId)
                     onAnswer(selectedOptionId)
                 }
             }
@@ -172,13 +175,8 @@ export const useQuizCard = ({ currentQuestion, onAnswer }: QuizCardProps) => {
         if (isSignificantDrag) {
             // If dragged far enough to trigger answer
             checkAnswer(currentPosition)
-        } else if (hasAnswered && isCorrect !== null) {
-            // If answer was already checked, proceed to next question
-            const correctOption = options?.find(option => option?.id === correctOptionId)
-            const otherOption = options?.find(option => option?.id !== correctOptionId)
-            if (correctOption?.id && otherOption?.id) {
-                onAnswer(isCorrect ? correctOption.id : otherOption.id)
-            }
+        } else if (hasAnswered && isCorrect !== null && selectAnswerId) {
+            onAnswer(selectAnswerId)
         } else {
             // Otherwise return to center
             xSpring.set(0) // Reset spring value

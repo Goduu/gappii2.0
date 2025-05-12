@@ -24,7 +24,6 @@ export default function BackStripe({ routesToHide, route }: BackStripeProps) {
             )}>
                 <CornerLeftUp />
             </div>
-            {router}
         </div>
     )
 }

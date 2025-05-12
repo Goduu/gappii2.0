@@ -7,12 +7,13 @@ import { Activity } from "./types"
 import { ChevronLeft, ChevronRight, Grab } from "lucide-react"
 import { DeepPartial } from "ai"
 import { useQuizCard } from "./useQuizCard"
-export interface QuizCardProps {
+
+export type SessionCardProps = {
     currentQuestion: DeepPartial<Activity>;
     onAnswer: (answerId: string) => void;
 }
 
-export function SessionCard({ currentQuestion, onAnswer }: QuizCardProps) {
+export function SessionCard({ currentQuestion, onAnswer }: SessionCardProps) {
 
     const { question,
         options,

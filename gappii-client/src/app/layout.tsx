@@ -4,6 +4,8 @@ import "./globals.css";
 import { ChatProvider } from "./ChatProvider";
 import { cn } from "@/lib/utils";
 import LogoText from "./home/LogoText";
+import { DebugBox } from '@/components/debug/DebugBox';
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

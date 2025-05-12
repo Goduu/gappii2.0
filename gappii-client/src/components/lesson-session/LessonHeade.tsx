@@ -3,14 +3,13 @@
 import { useSquareRouter } from "@/app/home/RouterContext";
 import { cn } from "@/lib/utils";
 import { Home } from "lucide-react";
-import Link from "next/link";
 
-interface GameHeaderProps {
+interface LessonHeaderProps {
   score: number;
   timeRemaining: number;
 }
 
-export function GameHeader({ score, timeRemaining }: GameHeaderProps) {
+export function LessonHeader({ score, timeRemaining }: LessonHeaderProps) {
 
   const { changeRouter: setRouter } = useSquareRouter()
 

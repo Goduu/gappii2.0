@@ -1,6 +1,7 @@
+"use client"
 import { createContext, useContext, ReactNode, useState, RefObject, useRef, useEffect } from 'react';
 import { experimental_useObject } from "@ai-sdk/react";
-import { UnderstandSubjectActivity, UnderstandSubjectsSchema } from '@/components/quiz/types';
+import { UnderstandSubjectActivity, UnderstandSubjectsSchema } from '@/components/lesson-session/types';
 import { DeepPartial } from 'ai';
 import { useSquareRouter } from './RouterContext';
 

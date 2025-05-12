@@ -1,7 +1,7 @@
-import { UnderstandSubjectsSchema } from "@/components/lesson-session/types";
+import { CreateSubjectTopicsAndActivitiesSchema } from "@/components/lesson-session/types";
 import { openai } from "@ai-sdk/openai";
 import { streamObject } from "ai";
-import { understandSubjectPrompt } from "./prompt";
+import { createSubjectTopicsAndActivitiesPrompt } from "./prompt";
 
 export const maxDuration = 60;
 
@@ -12,9 +12,9 @@ export async function POST(request: Request) {
 
     const result = streamObject({
         model: openai("gpt-4o-2024-08-06"),
-        system: understandSubjectPrompt,
+        system: createSubjectTopicsAndActivitiesPrompt,
         prompt: userPrompt,
-        schema: UnderstandSubjectsSchema,
+        schema: CreateSubjectTopicsAndActivitiesSchema,
         onFinish: (result) => {
             console.log(result)
         }
@@ -23,3 +23,4 @@ export async function POST(request: Request) {
     return result.toTextStreamResponse();
 
 }
+

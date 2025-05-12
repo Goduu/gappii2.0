@@ -22,7 +22,7 @@ export const ActivitiesSchema = z.object({
   activities: z.array(ActivitySchema),
 });
 
-const UnderstandSubjectSchema = z.object({
+export const UnderstandSubjectSchema = z.object({
   question: z.string(),
   options: z.array(QuizOptionSchema),
 });
@@ -33,3 +33,12 @@ export const UnderstandSubjectsSchema = z.object({
 
 export type Activity = z.infer<typeof ActivitySchema>;
 export type UnderstandSubjectActivity = z.infer<typeof UnderstandSubjectSchema>;
+
+
+export const CreateSubjectTopicsAndActivitiesSchema = z.object({
+  subject: z.string(),
+  topics: z.array(z.string()),
+  activities: z.array(ActivitySchema),
+});
+
+export type CreateSubjectTopicsAndActivities = z.infer<typeof CreateSubjectTopicsAndActivitiesSchema>;
