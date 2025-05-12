@@ -12,7 +12,7 @@ export default function TheSquare() {
         if (router === "home") {
             console.log("home")
             setRouter("inSquare")
-        } else if (router === "continue") {
+        } else if (router === "session/continue") {
             return;
         } else if (router !== "inSquare") {
             console.log("inSquare")
@@ -21,7 +21,7 @@ export default function TheSquare() {
     }
 
     const isInSquare = router !== "home"
-    const isContinueRoute = router === "continue"
+    const isContinueRoute = router === "session/continue"
 
     return (
         <div className={cn(

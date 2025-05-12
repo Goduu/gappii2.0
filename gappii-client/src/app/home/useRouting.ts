@@ -4,7 +4,7 @@ import { Route } from "./menuOptionsList";
 export default function useRouting(selectedOptions: Route) {
 
     const handleRouteClick = (option: Route) => {
-        if (option === "continue") {
+        if (option === "session/continue") {
             redirect("/resume")
         }
     }

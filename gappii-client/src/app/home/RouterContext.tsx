@@ -22,7 +22,7 @@ interface RouterProviderProps {
 
 export function RouterProvider({ children }: RouterProviderProps) {
     const [router, setRouter] = useState<Route>('home');
-    const isLessonRoute = router === "add-lesson" || router === "continue"
+    const isLessonRoute = router.includes("session")
     const isNewRoute = router === "new"
     const isInSquareRoute = router === "inSquare"
 

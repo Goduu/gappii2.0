@@ -2,10 +2,10 @@ import { TextAnimate } from "@/components/magicui/text-animate"
 import { AnimatePresence } from "framer-motion"
 import { useEffect } from "react"
 
-type IntroductionProps = {
+type SessionIntroductionProps = {
     onIntroductionComplete: () => void
 }
-export const Introduction = ({ onIntroductionComplete }: IntroductionProps) => {
+export const SessionIntroduction = ({ onIntroductionComplete }: SessionIntroductionProps) => {
 
     useEffect(() => {
         const timeout = setTimeout(() => {

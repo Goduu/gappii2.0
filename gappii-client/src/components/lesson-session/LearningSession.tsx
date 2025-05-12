@@ -4,8 +4,7 @@ import { useState, useCallback, useEffect } from "react"
 import { AnimatePresence, motion } from "motion/react"
 import { Activity, ActivitySchema } from "./types"
 import { SessionCard } from "./QuizCard"
-import { GameOverScreen } from "./GameOverScreen"
-import { useInput } from "@/app/home/InputContext"
+import { LearningSessionEnd } from "./GameOverScreen"
 import { DeepPartial } from "ai"
 import { useLessonSession } from "@/app/home/LessonSessionContext"
 import { useRouterChange } from "@/app/home/RouterContext"
@@ -23,14 +22,14 @@ export function LearningSession({ initialTime, isAddLessonRoute }: LearningSessi
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
     const [gameActive, setGameActive] = useState(true)
     const [isAnswering, setIsAnswering] = useState(false)
-    const { lesson } = useInput()
-    const [currentActivity, setCurrentActivity] = useState<DeepPartial<Activity> | undefined>(lesson?.activities[0])
+    const { activities } = useLessonSession()
+    const [currentActivity, setCurrentActivity] = useState<DeepPartial<Activity> | undefined>(activities[0])
 
     const { addAttempt } = useLessonSession()
 
     // Watch for router changes
     useRouterChange((newRoute, oldRoute) => {
-        if (oldRoute === "continue" || oldRoute === "add-lesson") {
+        if (oldRoute.includes("session")) {
             resetGame()
         }
     });
@@ -55,11 +54,10 @@ export function LearningSession({ initialTime, isAddLessonRoute }: LearningSessi
 
     // Update current question when index changes
     useEffect(() => {
-        const questions = lesson?.activities
-        if (questions && currentQuestionIndex < questions.length) {
-            setCurrentActivity(questions[currentQuestionIndex])
+        if (activities && currentQuestionIndex < activities.length) {
+            setCurrentActivity(activities[currentQuestionIndex])
         }
-    }, [currentQuestionIndex, lesson])
+    }, [currentQuestionIndex, activities])
 
     // Handle answer submission
     const handleAnswer = useCallback((selectedOption: string) => {
@@ -80,7 +78,7 @@ export function LearningSession({ initialTime, isAddLessonRoute }: LearningSessi
 
         // Move to next question after a short delay
         setTimeout(() => {
-            const questions = lesson?.activities
+            const questions = activities
             if (questions && currentQuestionIndex >= questions.length - 1) {
                 setGameActive(false)
             } else {
@@ -88,7 +86,7 @@ export function LearningSession({ initialTime, isAddLessonRoute }: LearningSessi
             }
             setIsAnswering(false)
         }, 500)
-    }, [isAnswering, currentActivity, addAttempt, lesson?.activities, currentQuestionIndex])
+    }, [isAnswering, currentActivity, addAttempt, activities, currentQuestionIndex])
 
     // Reset game state
     const resetGame = () => {
@@ -98,7 +96,7 @@ export function LearningSession({ initialTime, isAddLessonRoute }: LearningSessi
         setScore(0)
         setTimer(initialTime)
         setCurrentQuestionIndex(0)
-        setCurrentActivity(lesson?.activities[0])
+        setCurrentActivity(activities[0])
         setIsAnswering(false)
 
         // Use setTimeout to ensure state updates are processed before reactivating
@@ -128,9 +126,9 @@ export function LearningSession({ initialTime, isAddLessonRoute }: LearningSessi
                     </div>
                 ) : (
                     <AnimatePresence>
-                        <GameOverScreen
+                        <LearningSessionEnd
                             score={score}
-                            totalQuestions={lesson?.activities.length || 0}
+                            totalQuestions={activities.length || 0}
                             onReset={resetGame}
                             isAddLessonRoute={isAddLessonRoute}
                         />

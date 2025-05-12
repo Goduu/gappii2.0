@@ -1,9 +1,9 @@
 "use client"
-import { Activity, UnderstandSubjectActivity } from '@/components/lesson-session/types';
+import { Activity, NewSubjectActivity } from '@/components/lesson-session/types';
 import { createContext, useContext, ReactNode, useState } from 'react';
 
 interface LessonSessionContextType {
-    questions: Activity[];
+    activities: Activity[];
     setQuestions: (questions: Activity[]) => void;
     attempts: Attempt[];
     addAttempt: (attempt: Attempt) => void;
@@ -18,7 +18,7 @@ interface LessonSessionProviderProps {
 }
 
 export function LessonSessionProvider({ children }: LessonSessionProviderProps) {
-    const [questions, setQuestions] = useState<Activity[]>([]);
+    const [activities, setActivities] = useState<Activity[]>([]);
     const [attempts, setAttempts] = useState<Attempt[]>([]);
     const [newSubjectAttempts, setNewSubjectAttempts] = useState<NewSubjectAttempt[]>([]);
 
@@ -31,7 +31,7 @@ export function LessonSessionProvider({ children }: LessonSessionProviderProps) 
     }
 
     return (
-        <LessonSessionContext.Provider value={{ questions, setQuestions, attempts, addAttempt, newSubjectAttempts, addNewSubjectAttempt }}>
+        <LessonSessionContext.Provider value={{ activities, setQuestions: setActivities, attempts, addAttempt, newSubjectAttempts, addNewSubjectAttempt }}>
             {children}
         </LessonSessionContext.Provider>
     );
@@ -51,7 +51,7 @@ type Attempt = {
 }
 
 type NewSubjectAttempt = {
-    activity: UnderstandSubjectActivity;
+    activity: NewSubjectActivity;
     answerId: string;
 }
 

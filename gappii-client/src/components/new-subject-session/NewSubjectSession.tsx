@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react"
 import { AnimatePresence, motion } from "motion/react"
-import { Activity, UnderstandSubjectSchema } from "../lesson-session/types"
+import { Activity, NewSubjectSchema } from "../lesson-session/types"
 import { SessionCard } from "../lesson-session/QuizCard"
 import { useInput } from "@/app/home/InputContext"
 import { DeepPartial } from "ai"
@@ -20,14 +20,14 @@ export function NewSubjectSession() {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
     const [gameActive, setGameActive] = useState(true)
     const [isAnswering, setIsAnswering] = useState(false)
-    const { lesson } = useInput()
+    const { newSubjectLesson: lesson } = useInput()
     const [currentActivity, setCurrentActivity] = useState<DeepPartial<Activity> | undefined>(lesson?.activities[0])
 
     const { addNewSubjectAttempt } = useLessonSession()
 
     // Watch for router changes
     useRouterChange((newRoute, oldRoute) => {
-        if (oldRoute === "continue" || oldRoute === "add-lesson") {
+        if (oldRoute.includes("session")) {
             resetGame()
         }
     });
@@ -46,7 +46,7 @@ export function NewSubjectSession() {
 
         setIsAnswering(true)
 
-        const validationResult = UnderstandSubjectSchema.safeParse(currentActivity)
+        const validationResult = NewSubjectSchema.safeParse(currentActivity)
         if (!validationResult.success) {
             console.warn('Current question is not a complete Activity object:', currentActivity)
             return

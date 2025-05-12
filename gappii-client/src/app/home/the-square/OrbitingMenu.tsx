@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Route, options } from "../menuOptionsList";
+import { Route, options, titleOptions } from "../menuOptionsList";
 import { capitalize } from "lodash";
 import { useSquareRouter } from "../RouterContext";
 import OrbitingOption from "./OrbitingOption";
@@ -23,7 +23,7 @@ export default function OrbitingMenu({
     containerClassName,
     className,
 }: OrbitingItemsProps) {
-    const [lastHovered, setLastHovered] = useState<Route>("continue");
+    const [lastHovered, setLastHovered] = useState<Route>("session/continue");
     const { changeRouter: setRouter, isInSquareRoute } = useSquareRouter()
     const { focusInput } = useInput()
 
@@ -134,7 +134,7 @@ export default function OrbitingMenu({
 
                                     )}
                                 >
-                                    {capitalize(lastHovered)}
+                                    {capitalize(titleOptions[lastHovered])}
                                 </motion.div>
                             </div>
                         </motion.div>

@@ -14,9 +14,9 @@ export type Option = {
 
 export const options: Option[] = [
     {
-        id: "continue",
+        id: "session/continue",
         name: "Continue",
-        routesOpen: ["add-lesson", "continue"],
+        routesOpen: ["session/new-subject", "session/continue"],
         component: <Continue />
     },
     {
@@ -39,14 +39,14 @@ export const options: Option[] = [
     }
 ]
 
-export type Route = "home" | "inSquare" | "continue" | "new" | "add-lesson" | "change" | "explore"
+export type Route = "home" | "inSquare" | "session/continue" | "new" | "session/new-subject" | "change" | "explore"
 
 export const titleOptions: Record<Route, string> = {
     "home": "Home",
     "inSquare": "In Square",
-    "continue": "Continue",
+    "session/continue": "Continue",
     "new": "New",
-    "add-lesson": "Add Lesson",
+    "session/new-subject": "New Subject",
     "change": "Change",
     "explore": "Explore",
 }

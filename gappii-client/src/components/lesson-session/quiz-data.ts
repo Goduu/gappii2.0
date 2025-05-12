@@ -8,7 +8,7 @@ export const SampleQuizData: Activity[] = [
       { id: 'a', text: 'One quite big answer test 123' },
       { id: 'b', text: 'Another answer very long test 123' }
     ],
-    keyConcepts: ['key concept 1', 'key concept 2'],
+    topics: ['key concept 1', 'key concept 2'],
     correctOptionId: 'a'
   },
   {
@@ -18,7 +18,7 @@ export const SampleQuizData: Activity[] = [
       { id: 'a', text: 'Paris' },
       { id: 'b', text: 'London' }
     ],
-    keyConcepts: ['key concept 1', 'key concept 2'],
+    topics: ['key concept 1', 'key concept 2'],
     correctOptionId: 'a'
   },
   {
@@ -28,7 +28,7 @@ export const SampleQuizData: Activity[] = [
       { id: 'a', text: 'Red' },
       { id: 'b', text: 'Blue' }
     ],
-    keyConcepts: ['key concept 1', 'key concept 2'],
+    topics: ['key concept 1', 'key concept 2'],
     correctOptionId: 'b'
   },
   {
@@ -38,7 +38,7 @@ export const SampleQuizData: Activity[] = [
       { id: 'a', text: 'Jupiter' },
       { id: 'b', text: 'Saturn' }
     ],
-    keyConcepts: ['key concept 4', 'key concept 2'],
+    topics: ['key concept 4', 'key concept 2'],
     correctOptionId: 'a'
   },
   {
@@ -48,7 +48,7 @@ export const SampleQuizData: Activity[] = [
       { id: 'a', text: 'Python' },
       { id: 'b', text: 'JavaScript' }
     ],
-    keyConcepts: ['key concept 3'],
+    topics: ['key concept 3'],
     correctOptionId: 'b'
   },
   {
@@ -58,7 +58,7 @@ export const SampleQuizData: Activity[] = [
       { id: 'a', text: 'Rio de Janeiro' },
       { id: 'b', text: 'Brasilia' }
     ],
-    keyConcepts: ['key concept 6', 'key concept 5'],
+    topics: ['key concept 6', 'key concept 5'],
     correctOptionId: 'b'
   }
 ]; 

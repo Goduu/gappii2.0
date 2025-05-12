@@ -13,12 +13,12 @@ interface GameOverScreenProps {
   isAddLessonRoute: boolean;
 }
 
-export function GameOverScreen({ score, totalQuestions, onReset, isAddLessonRoute }: GameOverScreenProps) {
+export function LearningSessionEnd({ score, totalQuestions, onReset, isAddLessonRoute }: GameOverScreenProps) {
   const { changeRouter: setRouter } = useSquareRouter()
   const { attempts } = useLessonSession()
 
 
-  const { submit, isLoading, object } = experimental_useObject({
+  const { submit, isLoading } = experimental_useObject({
     api: "/api/createSubjectTopicsAndActivities",
     schema: CreateSubjectTopicsAndActivitiesSchema,
     onFinish({ object }) {
@@ -35,7 +35,7 @@ export function GameOverScreen({ score, totalQuestions, onReset, isAddLessonRout
     if (!isLoading) {
       submit({
         userPrompt: attempts.map(attempt =>
-          "question: " + attempt.activity.question 
+          "question: " + attempt.activity.question
         ).join("\n")
       })
     }
