@@ -8,7 +8,7 @@ import { useInput } from "@/app/home/InputContext"
 import { DeepPartial } from "ai"
 import { useLessonSession } from "@/app/home/LessonSessionContext"
 import { useRouterChange } from "@/app/home/RouterContext"
-import { SessionFinish } from "./SessionFinish"
+import { NewSubjectSessionFinish } from "./SessionFinish"
 
 export interface NewSubjectSessionProps {
     initialTime: number;
@@ -105,9 +105,7 @@ export function NewSubjectSession() {
                     </div>
                 ) : (
                     <AnimatePresence>
-                        <SessionFinish
-                            onReset={resetGame}
-                        />
+                        <NewSubjectSessionFinish />
                     </AnimatePresence>
                 )}
             </div>

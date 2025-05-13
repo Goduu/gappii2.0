@@ -7,15 +7,12 @@ import { experimental_useObject } from "@ai-sdk/react";
 import { useState } from "react";
 import { CreateSubjectTopicsAndActivitiesSchema } from "../lesson-session/types";
 import { TypingAnimation } from "../magicui/typing-animation";
+import GibberishText from "../magicui/gibberish-text";
 
-interface SessionFinishProps {
-    onReset: () => void;
-}
-
-export function SessionFinish({ onReset }: SessionFinishProps) {
+export function NewSubjectSessionFinish() {
     const { changeRouter: setRouter } = useSquareRouter()
     const [loadedSubject, setLoadedSubject] = useState(false)
-    const { newSubjectAttempts, setQuestions } = useLessonSession()
+    const { newSubjectAttempts, setQuestions, currentSubject, setCurrentSubject } = useLessonSession()
 
 
     const { submit, isLoading } = experimental_useObject({
@@ -25,7 +22,10 @@ export function SessionFinish({ onReset }: SessionFinishProps) {
             if (object != null) {
                 console.log('setting questions', object)
                 setQuestions(object.activities)
-                setRouter('session/continue')
+                setCurrentSubject(object.subject)
+                setTimeout(() => {
+                    setRouter('session/continue')
+                }, 3000)
             }
             setLoadedSubject(true)
         },
@@ -59,6 +59,9 @@ export function SessionFinish({ onReset }: SessionFinishProps) {
             <TypingAnimation className="text-3xl md:text-4xl font-bold mb-4" delay={2500}>
                 about...
             </TypingAnimation>
+            {currentSubject && (
+                <GibberishText text={currentSubject} className="text-3xl md:text-4xl font-bold mb-4" />
+            )}
         </motion.div>
     )
 } 

@@ -3,8 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ChatProvider } from "./ChatProvider";
 import { cn } from "@/lib/utils";
-import LogoText from "./home/LogoText";
-import { DebugBox } from '@/components/debug/DebugBox';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,7 +32,6 @@ export default function RootLayout({
           `${geistSans.variable} ${geistMono.variable} antialiased`
         )}
       >
-        <LogoText />
         <div className="py-0">
           <ChatProvider>
             {/* <StateAnimations /> */}

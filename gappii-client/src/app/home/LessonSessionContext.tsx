@@ -9,6 +9,8 @@ interface LessonSessionContextType {
     addAttempt: (attempt: Attempt) => void;
     newSubjectAttempts: NewSubjectAttempt[];
     addNewSubjectAttempt: (attempt: NewSubjectAttempt) => void;
+    currentSubject: string | null;
+    setCurrentSubject: (subject: string) => void;
 }
 
 const LessonSessionContext = createContext<LessonSessionContextType | undefined>(undefined);
@@ -21,6 +23,7 @@ export function LessonSessionProvider({ children }: LessonSessionProviderProps) 
     const [activities, setActivities] = useState<Activity[]>([]);
     const [attempts, setAttempts] = useState<Attempt[]>([]);
     const [newSubjectAttempts, setNewSubjectAttempts] = useState<NewSubjectAttempt[]>([]);
+    const [currentSubject, setCurrentSubject] = useState<string | null>(null);
 
     const addAttempt = (newAttempt: Attempt) => {
         setAttempts([...attempts, newAttempt]);
@@ -31,7 +34,16 @@ export function LessonSessionProvider({ children }: LessonSessionProviderProps) 
     }
 
     return (
-        <LessonSessionContext.Provider value={{ activities, setQuestions: setActivities, attempts, addAttempt, newSubjectAttempts, addNewSubjectAttempt }}>
+        <LessonSessionContext.Provider value={{
+            activities,
+            setQuestions: setActivities,
+            attempts,
+            addAttempt,
+            newSubjectAttempts,
+            addNewSubjectAttempt,
+            currentSubject,
+            setCurrentSubject
+        }}>
             {children}
         </LessonSessionContext.Provider>
     );
