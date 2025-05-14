@@ -1,9 +1,11 @@
 "use client"
-import { createContext, useContext, ReactNode, useState, RefObject, useRef, useEffect } from 'react';
+import { createContext, useContext, ReactNode, useState, RefObject, useRef, useEffect, useCallback } from 'react';
 import { experimental_useObject } from "@ai-sdk/react";
 import { NewSubjectActivity, UnderstandSubjectsSchema } from '@/components/lesson-session/types';
 import { DeepPartial } from 'ai';
-import { useSquareRouter } from './RouterContext';
+import { useRouterChange, useSquareRouter } from './RouterContext';
+
+type NewSubjectLesson = { activities: NewSubjectActivity[] | DeepPartial<NewSubjectActivity[]> } | null
 
 interface InputContextType {
     inputValue: string;
@@ -11,9 +13,9 @@ interface InputContextType {
     inputRef: RefObject<HTMLInputElement | null>;
     focusInput: () => void;
     blurAndClearInput: () => void;
-    submit: (input: { userPrompt: string }) => void;
+    handleSubmit: (input: { userPrompt: string }) => void;
     isLoading: boolean;
-    newSubjectLesson?: { activities: NewSubjectActivity[] | DeepPartial<NewSubjectActivity[]> } | null;
+    newSubjectLesson?: NewSubjectLesson;
 }
 
 const InputContext = createContext<InputContextType | undefined>(undefined);
@@ -26,6 +28,8 @@ export function InputContextProvider({ children }: InputContextProviderProps) {
     const [inputValue, setInputValue] = useState<string>('');
     const inputRef = useRef<HTMLInputElement>(null);
     const { changeRouter: setRouter, isNewRoute } = useSquareRouter()
+    const [submitted, setSubmitted] = useState<boolean>(false)
+
 
     const { submit, isLoading, object: activities } = experimental_useObject({
         api: "/api/understandSubject",
@@ -41,20 +45,35 @@ export function InputContextProvider({ children }: InputContextProviderProps) {
     });
 
     useEffect(() => {
-        if (activities?.activities?.[0] && isNewRoute) {
+        if (activities?.activities?.[0] && isNewRoute && submitted) {
             setRouter('session/new-subject')
+            blurAndClearInput()
+            setSubmitted(false)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activities, setRouter])
+
+    const handleSubmit = (input: { userPrompt: string }) => {
+        setSubmitted(true)
+        submit(input)
+    }
 
     const focusInput = () => {
         inputRef.current?.focus();
         inputRef.current?.select();
     }
 
-    const blurAndClearInput = () => {
+    const blurAndClearInput = useCallback(() => {
         inputRef.current?.blur();
         setInputValue('');
-    }
+    }, [])
+
+    useRouterChange((newRoute) => {
+        if (newRoute === "new") {
+            setInputValue("")
+        }
+    });
+
     return (
         <InputContext.Provider value={{
             inputValue,
@@ -62,7 +81,7 @@ export function InputContextProvider({ children }: InputContextProviderProps) {
             inputRef,
             focusInput,
             blurAndClearInput,
-            submit,
+            handleSubmit,
             isLoading,
             newSubjectLesson: activities?.activities ? { activities: activities.activities } : null
         }}>

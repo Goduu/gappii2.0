@@ -9,7 +9,7 @@ export default function TheCircle() {
     const { router, isInSquareRoute, isLessonRoute } = useSquareRouter()
     const isInSquare = router !== "home"
 
-    const { inputValue, setInputValue, inputRef, submit } = useInput()
+    const { inputValue, setInputValue, inputRef, handleSubmit: submit } = useInput()
 
     return (
         <motion.div

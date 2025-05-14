@@ -9,13 +9,14 @@ import { DeepPartial } from "ai"
 import { useQuizCard } from "./useQuizCard"
 
 export type SessionCardProps = {
-    currentQuestion: DeepPartial<Activity>;
+    currentActivity: DeepPartial<Activity>;
     onAnswer: (answerId: string) => void;
 }
 
-export function SessionCard({ currentQuestion, onAnswer }: SessionCardProps) {
+export function SessionCard({ currentActivity, onAnswer }: SessionCardProps) {
 
-    const { question,
+    const {
+        description,
         options,
         correctOptionId,
         colorTransform,
@@ -25,7 +26,7 @@ export function SessionCard({ currentQuestion, onAnswer }: SessionCardProps) {
         boundaries,
         getBackgroundColor,
         handleDragEnd,
-    } = useQuizCard({ currentQuestion, onAnswer })
+    } = useQuizCard({ currentActivity, onAnswer })
 
     return (
         <motion.div
@@ -33,14 +34,14 @@ export function SessionCard({ currentQuestion, onAnswer }: SessionCardProps) {
             style={{ background: getBackgroundColor() }}
         >
             <div className="h-1/2 md:h-2/5 text-white text-xl md:text-2xl font-bold w-full px-4 justify-center items-center flex select-none">
-                {question}
+                {description}
             </div>
 
             <div className="h-1/2 md:h-1/5 w-full px-4">
                 <AnimatePresence mode="wait">
                     <div className="flex h-full gap-2 justify-between w-full">
-                        <OptionCard key={`left-${options?.[0]?.id}`} option={options?.[0]} position="left" />
-                        <OptionCard key={`right-${options?.[1]?.id}`} option={options?.[1]} position="right" />
+                        <OptionCard key={`left-${options?.[0]}`} option={options?.[0]} position="left" />
+                        <OptionCard key={`right-${options?.[1]}`} option={options?.[1]} position="right" />
                     </div>
                 </AnimatePresence>
             </div>
@@ -57,7 +58,7 @@ export function SessionCard({ currentQuestion, onAnswer }: SessionCardProps) {
                             controls={controls}
                             colorTransform={colorTransform}
                             dragBoundaries={{ left: boundaries.leftBoundary, right: boundaries.rightBoundary }}
-                            correctAnswerPosition={!correctOptionId ? "all" : correctOptionId === options?.[0]?.id ? "left" : "right"}
+                            correctAnswerPosition={!correctOptionId ? "all" : correctOptionId === options?.[0] ? "left" : "right"}
                             handleDragEnd={handleDragEnd}
                             hasAnswered={hasAnswered}
                         />

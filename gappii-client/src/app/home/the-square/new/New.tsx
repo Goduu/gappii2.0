@@ -1,4 +1,4 @@
-import { useSquareRouter } from "../../RouterContext"
+import { useRouterChange, useSquareRouter } from "../../RouterContext"
 import { Plus } from "lucide-react"
 import { TextAnimate } from "@/components/magicui/text-animate"
 import { PageWrapper } from "../PageWrapper"

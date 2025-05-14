@@ -2,8 +2,8 @@ import { useAnimation, useSpring, useTransform } from "framer-motion"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { SessionCardProps } from "./QuizCard"
 
-export const useQuizCard = ({ currentQuestion, onAnswer }: SessionCardProps) => {
-    const { question, options, correctOptionId } = currentQuestion
+export const useQuizCard = ({ currentActivity, onAnswer }: SessionCardProps) => {
+    const { description, options, correctOption: correctOptionId } = currentActivity
     const xSpring = useSpring(0, { stiffness: 400, damping: 30 })
     const controls = useAnimation()
     const [hasAnswered, setHasAnswered] = useState(false)
@@ -69,7 +69,7 @@ export const useQuizCard = ({ currentQuestion, onAnswer }: SessionCardProps) => 
                 "rgb(3, 209, 0)", // Green right
             ]
             :
-            (options && options?.[0]?.id === correctOptionId) ?
+            (options && options?.[0] === correctOptionId) ?
                 [
                     "rgb(3, 209, 0)", // Green left
                     "rgb(20, 0, 20)", // Black center
@@ -104,7 +104,7 @@ export const useQuizCard = ({ currentQuestion, onAnswer }: SessionCardProps) => 
 
         // Calculate if the answer is correct
         const isRight = direction === 'right'
-        const selectedOptionId = isRight ? options && options?.[1]?.id : options && options?.[0]?.id
+        const selectedOptionId = isRight ? options && options?.[1] : options && options?.[0]
         const correct = !correctOptionId || selectedOptionId === correctOptionId
         setIsCorrect(correct)
 
@@ -137,7 +137,7 @@ export const useQuizCard = ({ currentQuestion, onAnswer }: SessionCardProps) => 
         setHasAnswered(true)
 
         // Ensure consistency: left = options[0], right = options[1]
-        const selectedOptionId = isLeft ? options?.[0]?.id : options?.[1]?.id
+        const selectedOptionId = isLeft ? options?.[0] : options?.[1]
         const correct = !correctOptionId || selectedOptionId === correctOptionId
         setIsCorrect(correct)
 
@@ -153,7 +153,7 @@ export const useQuizCard = ({ currentQuestion, onAnswer }: SessionCardProps) => 
             transition: { type: 'spring', stiffness: 2000, damping: 30 }
         }).then(() => {
             if (isMounted.current) {
-                // Only proceed to the next question if not dragging
+                // Only proceed to the next activity if not dragging
                 if (!isDragging && selectedOptionId) {
                     setSelectedAnswerId(selectedOptionId)
                     onAnswer(selectedOptionId)
@@ -229,7 +229,7 @@ export const useQuizCard = ({ currentQuestion, onAnswer }: SessionCardProps) => 
     }
 
     return {
-        question,
+        description,
         options,
         correctOptionId,
         colorTransform,

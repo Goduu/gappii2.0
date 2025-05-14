@@ -4,13 +4,14 @@ import { createContext, useContext, ReactNode, useState } from 'react';
 
 interface LessonSessionContextType {
     activities: Activity[];
-    setQuestions: (questions: Activity[]) => void;
+    setActivities: (activities: Activity[]) => void;
     attempts: Attempt[];
     addAttempt: (attempt: Attempt) => void;
-    newSubjectAttempts: NewSubjectAttempt[];
-    addNewSubjectAttempt: (attempt: NewSubjectAttempt) => void;
+    newSubjectAttempts: NewSubjectAnswer[];
+    addNewSubjectAttempt: (attempt: NewSubjectAnswer) => void;
     currentSubject: string | null;
     setCurrentSubject: (subject: string) => void;
+    startSession: () => void;
 }
 
 const LessonSessionContext = createContext<LessonSessionContextType | undefined>(undefined);
@@ -22,27 +23,33 @@ interface LessonSessionProviderProps {
 export function LessonSessionProvider({ children }: LessonSessionProviderProps) {
     const [activities, setActivities] = useState<Activity[]>([]);
     const [attempts, setAttempts] = useState<Attempt[]>([]);
-    const [newSubjectAttempts, setNewSubjectAttempts] = useState<NewSubjectAttempt[]>([]);
+    const [newSubjectAnswers, setNewSubjectAnswers] = useState<NewSubjectAnswer[]>([]);
     const [currentSubject, setCurrentSubject] = useState<string | null>(null);
 
     const addAttempt = (newAttempt: Attempt) => {
         setAttempts([...attempts, newAttempt]);
     }
 
-    const addNewSubjectAttempt = (newAttempt: NewSubjectAttempt) => {
-        setNewSubjectAttempts([...newSubjectAttempts, newAttempt]);
+    const addNewSubjectAttempt = (newAttempt: NewSubjectAnswer) => {
+        setNewSubjectAnswers([...newSubjectAnswers, newAttempt]);
+    }
+
+    const startSession = () => {
+        setAttempts([]);
+        setNewSubjectAnswers([]);
     }
 
     return (
         <LessonSessionContext.Provider value={{
             activities,
-            setQuestions: setActivities,
+            setActivities,
             attempts,
             addAttempt,
-            newSubjectAttempts,
+            newSubjectAttempts: newSubjectAnswers,
             addNewSubjectAttempt,
             currentSubject,
-            setCurrentSubject
+            setCurrentSubject,
+            startSession
         }}>
             {children}
         </LessonSessionContext.Provider>
@@ -62,7 +69,7 @@ type Attempt = {
     isCorrect: boolean;
 }
 
-type NewSubjectAttempt = {
+type NewSubjectAnswer = {
     activity: NewSubjectActivity;
     answerId: string;
 }

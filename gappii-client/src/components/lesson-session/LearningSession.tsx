@@ -19,18 +19,21 @@ export function LearningSession({ initialTime, isAddLessonRoute }: LearningSessi
     // Game state
     const [score, setScore] = useState(0)
     const [timer, setTimer] = useState(initialTime)
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+    const [currentActivityIndex, setCurrentActivityIndex] = useState(0)
     const [gameActive, setGameActive] = useState(true)
     const [isAnswering, setIsAnswering] = useState(false)
     const { activities } = useLessonSession()
     const [currentActivity, setCurrentActivity] = useState<DeepPartial<Activity> | undefined>(activities[0])
 
-    const { addAttempt } = useLessonSession()
+    const { addAttempt, startSession } = useLessonSession()
 
     // Watch for router changes
     useRouterChange((newRoute, oldRoute) => {
         if (oldRoute.includes("session")) {
             resetGame()
+        }
+        if (newRoute.includes("session")) {
+            startSession()
         }
     });
 
@@ -52,12 +55,11 @@ export function LearningSession({ initialTime, isAddLessonRoute }: LearningSessi
         return () => clearInterval(interval)
     }, [gameActive])
 
-    // Update current question when index changes
     useEffect(() => {
-        if (activities && currentQuestionIndex < activities.length) {
-            setCurrentActivity(activities[currentQuestionIndex])
+        if (activities && currentActivityIndex < activities.length) {
+            setCurrentActivity(activities[currentActivityIndex])
         }
-    }, [currentQuestionIndex, activities])
+    }, [currentActivityIndex, activities])
 
     // Handle answer submission
     const handleAnswer = useCallback((selectedOption: string) => {
@@ -68,25 +70,24 @@ export function LearningSession({ initialTime, isAddLessonRoute }: LearningSessi
 
         const validationResult = ActivitySchema.safeParse(currentActivity)
         if (!validationResult.success) {
-            console.warn('Current question is not a complete Activity object:', currentActivity)
+            console.warn('Current activity is not a complete Activity object:', currentActivity)
             return
         }
         addAttempt({
             activity: validationResult.data,
-            isCorrect: selectedOption === validationResult.data.correctOptionId
+            isCorrect: selectedOption === validationResult.data.correctOption
         })
 
-        // Move to next question after a short delay
+        // Move to next activity after a short delay
         setTimeout(() => {
-            const questions = activities
-            if (questions && currentQuestionIndex >= questions.length - 1) {
+            if (activities && currentActivityIndex >= activities.length - 1) {
                 setGameActive(false)
             } else {
-                setCurrentQuestionIndex(prevIndex => prevIndex + 1)
+                setCurrentActivityIndex(prevIndex => prevIndex + 1)
             }
             setIsAnswering(false)
         }, 500)
-    }, [isAnswering, currentActivity, addAttempt, activities, currentQuestionIndex])
+    }, [isAnswering, currentActivity, addAttempt, activities, currentActivityIndex])
 
     // Reset game state
     const resetGame = () => {
@@ -95,7 +96,7 @@ export function LearningSession({ initialTime, isAddLessonRoute }: LearningSessi
         // Reset all state variables
         setScore(0)
         setTimer(initialTime)
-        setCurrentQuestionIndex(0)
+        setCurrentActivityIndex(0)
         setCurrentActivity(activities[0])
         setIsAnswering(false)
 
@@ -120,7 +121,7 @@ export function LearningSession({ initialTime, isAddLessonRoute }: LearningSessi
                 {gameActive && currentActivity ? (
                     <div className="w-full h-full flex items-center justify-center">
                         <SessionCard
-                            currentQuestion={currentActivity}
+                            currentActivity={currentActivity}
                             onAnswer={handleAnswer}
                         />
                     </div>
@@ -128,7 +129,7 @@ export function LearningSession({ initialTime, isAddLessonRoute }: LearningSessi
                     <AnimatePresence>
                         <LearningSessionEnd
                             score={score}
-                            totalQuestions={activities.length || 0}
+                            totalActivities={activities.length || 0}
                             onReset={resetGame}
                             isAddLessonRoute={isAddLessonRoute}
                         />

@@ -130,15 +130,6 @@ export default function Home() {
               </p>
             </motion.div>
 
-            {/* Testimonial mini carousel */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 1.8 }}
-              className="max-w-sm mx-auto mt-4 sm:mt-6 px-6 py-4 bg-white/50 dark:bg-midnight-800/30 backdrop-blur-sm rounded-lg shadow-sm border border-midnight-200 dark:border-midnight-800"
-            >
-              <TestimonialCarousel />
-            </motion.div>
           </div>
 
           {/* Feature cards */}
@@ -172,14 +163,12 @@ export default function Home() {
 
         </div>
       </main>
-      <div className="w-screen max-w-4xl mt-8 md:mt-12 hidden sm:block relative h-36">
-        <GridBeam className="h-[120px] sm:h-[180px] md:h-[200px]">
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-midnight-700 dark:from-midnight-700 to-transparent h-24 z-10" />
-        </GridBeam>
-      </div>
+      <GridBeam className="h-[120px] sm:h-[180px] md:h-96 overflow-hidden">
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-midnight-800 via-midnight-900 to-transparent h-18 sm:h-32 md:h-48  z-10" />
+      </GridBeam>
 
       {/* Footer */}
-      <footer className="relative z-10 py-4 sm:py-6 px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center border-t border-midnight-200 dark:border-midnight-800 text-center bg-gradient-to-b from-midnight-900 to-midnight-950 overflow-hidden">
+      <footer className="relative z-10 py-4 h-20 sm:py-6 px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center border-t border-midnight-200 dark:border-midnight-800 text-center bg-gradient-to-b from-midnight-900 to-midnight-950 overflow-hidden">
         <p className="text-xs sm:text-sm text-white dark:text-white mb-2 sm:mb-0">
           Limited beta access. By signing up, you agree to our <a href="#" className="underline">Terms</a> and <a href="#" className="underline">Privacy Policy</a>.
         </p>
@@ -219,81 +208,6 @@ const SpinnerIcon = ({ className }: { className?: string }) => (
     ></path>
   </svg>
 );
-
-// Testimonial carousel
-const TestimonialCarousel = () => {
-  const testimonials = [
-    {
-      id: 1,
-      text: "Gappii helped me learn Python in half the time it would normally take!",
-      author: "Sofia K.",
-      role: "Product Designer",
-    },
-    {
-      id: 2,
-      text: "The personalized approach is amazing. It's like having a tutor that knows exactly how I learn.",
-      author: "Marcus T.",
-      role: "Marketing Specialist",
-    },
-    {
-      id: 3,
-      text: "I've tried many learning apps, but Gappii's AI approach is revolutionary.",
-      author: "Alex W.",
-      role: "Software Engineer",
-    },
-  ];
-
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveIndex((current) => (current + 1) % testimonials.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [testimonials.length]);
-
-  return (
-    <div className="relative overflow-hidden">
-      <div className="flex items-center">
-        <div className="text-midnight-600 dark:text-midnight-400 mr-2">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M4.583 17.321C3.553 16.227 3 15 3 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179zm10 0C13.553 16.227 13 15 13 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179z" />
-          </svg>
-        </div>
-        <div
-          className="transition-transform duration-700 ease-in-out transform"
-          style={{ transform: `translateX(-${activeIndex * 100}%)` }}
-        >
-          {testimonials.map((testimonial, index) => (
-            <div
-              key={testimonial.id}
-              className="w-full flex-shrink-0 min-w-full"
-              style={{ display: index === activeIndex ? 'block' : 'none' }}
-            >
-              <p className="text-midnight-700 dark:text-midnight-300 text-sm sm:text-base">{testimonial.text}</p>
-              <div className="mt-2 flex items-center">
-                <span className="text-xs font-medium text-midnight-900 dark:text-white">{testimonial.author}</span>
-                <span className="mx-1 text-midnight-400">•</span>
-                <span className="text-xs text-midnight-500 dark:text-midnight-400">{testimonial.role}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="flex justify-center mt-3 space-x-1">
-        {testimonials.map((_, index) => (
-          <button
-            key={index}
-            className={`h-1.5 rounded-full transition-all ${index === activeIndex ? 'w-4 bg-midnight-500' : 'w-1.5 bg-midnight-300 dark:bg-midnight-600'
-              }`}
-            onClick={() => setActiveIndex(index)}
-            aria-label={`Go to testimonial ${index + 1}`}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
 
 // Typing effect headline component
 const TypingHeadline = () => {
@@ -356,7 +270,7 @@ interface GridBeamProps {
 
 export const GridBeam = ({ children, className }: GridBeamProps) => (
   <div className={cn('relative h-full overflow-hidden w-screen', className)}>
-    <div className="relative flex h-[500px] w-full flex-col items-center justify-center overflow-hidden rounded-lg border bg-gradient-to-b from-midnight-900 to-midnight-950">
+    <div className="relative w-screen flex h-[500px] flex-col items-center justify-center overflow-hidden rounded-lg border bg-gradient-to-b from-midnight-900 to-midnight-950">
       <Beam />
       <DotPattern
         className={cn(

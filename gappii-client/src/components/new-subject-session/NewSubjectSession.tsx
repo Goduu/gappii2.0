@@ -17,28 +17,31 @@ export interface NewSubjectSessionProps {
 
 export function NewSubjectSession() {
     // Game state
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+    const [currentActivityIndex, setCurrentActivityIndex] = useState(0)
     const [gameActive, setGameActive] = useState(true)
     const [isAnswering, setIsAnswering] = useState(false)
     const { newSubjectLesson: lesson } = useInput()
     const [currentActivity, setCurrentActivity] = useState<DeepPartial<Activity> | undefined>(lesson?.activities[0])
 
-    const { addNewSubjectAttempt } = useLessonSession()
+    const { addNewSubjectAttempt, startSession } = useLessonSession()
 
     // Watch for router changes
     useRouterChange((newRoute, oldRoute) => {
         if (oldRoute.includes("session")) {
             resetGame()
         }
+        if (newRoute.includes("session")) {
+            startSession()
+        }
     });
 
-    // Update current question when index changes
+    // Update current activity when index changes
     useEffect(() => {
-        const questions = lesson?.activities
-        if (questions && currentQuestionIndex < questions.length) {
-            setCurrentActivity(questions[currentQuestionIndex])
+        const activities = lesson?.activities
+        if (activities && currentActivityIndex < activities.length) {
+            setCurrentActivity(activities[currentActivityIndex])
         }
-    }, [currentQuestionIndex, lesson])
+    }, [currentActivityIndex, lesson])
 
     // Handle answer submission
     const handleAnswer = useCallback((answer: string) => {
@@ -48,7 +51,7 @@ export function NewSubjectSession() {
 
         const validationResult = NewSubjectSchema.safeParse(currentActivity)
         if (!validationResult.success) {
-            console.warn('Current question is not a complete Activity object:', currentActivity)
+            console.warn('Current activity is not a complete Activity object:', currentActivity)
             return
         }
         addNewSubjectAttempt({
@@ -56,24 +59,24 @@ export function NewSubjectSession() {
             answerId: answer
         })
 
-        // Move to next question after a short delay
+        // Move to next activity after a short delay
         setTimeout(() => {
-            const questions = lesson?.activities
-            if (questions && currentQuestionIndex >= questions.length - 1) {
+            const activities = lesson?.activities
+            if (activities && currentActivityIndex >= activities.length - 1) {
                 setGameActive(false)
             } else {
-                setCurrentQuestionIndex(prevIndex => prevIndex + 1)
+                setCurrentActivityIndex(prevIndex => prevIndex + 1)
             }
             setIsAnswering(false)
         }, 500)
-    }, [isAnswering, currentActivity, addNewSubjectAttempt, lesson?.activities, currentQuestionIndex])
+    }, [isAnswering, currentActivity, addNewSubjectAttempt, lesson?.activities, currentActivityIndex])
 
     // Reset game state
     const resetGame = () => {
         // First deactivate the game
         setGameActive(false)
         // Reset all state variables
-        setCurrentQuestionIndex(0)
+        setCurrentActivityIndex(0)
         setCurrentActivity(lesson?.activities[0])
         setIsAnswering(false)
 
@@ -99,7 +102,7 @@ export function NewSubjectSession() {
                 {gameActive && currentActivity ? (
                     <div className="w-full h-full flex items-center justify-center">
                         <SessionCard
-                            currentQuestion={currentActivity}
+                            currentActivity={currentActivity}
                             onAnswer={handleAnswer}
                         />
                     </div>

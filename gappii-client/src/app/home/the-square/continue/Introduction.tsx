@@ -3,9 +3,10 @@ import { AnimatePresence } from "framer-motion"
 import { useEffect } from "react"
 
 type SessionIntroductionProps = {
+    text: string,
     onIntroductionComplete: () => void
 }
-export const SessionIntroduction = ({ onIntroductionComplete }: SessionIntroductionProps) => {
+export const SessionIntroduction = ({ text, onIntroductionComplete }: SessionIntroductionProps) => {
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -22,7 +23,7 @@ export const SessionIntroduction = ({ onIntroductionComplete }: SessionIntroduct
                 className="text-2xl md:text-3xl font-black"
                 duration={0.7}
             >
-                Let&apos;s understand better what you want to learn
+                {text}
             </TextAnimate>
         </AnimatePresence>
     )

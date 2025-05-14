@@ -5,17 +5,12 @@ export interface QuizOption {
   text: string;
 }
 
-const QuizOptionSchema = z.object({
-  id: z.string(),
-  text: z.string(),
-});
-
 export const ActivitySchema = z.object({
   id: z.string(),
-  question: z.string(),
-  options: z.array(QuizOptionSchema),
+  description: z.string(),
+  options: z.array(z.string()).min(2).max(2),
   topics: z.array(z.string()),
-  correctOptionId: z.string(),
+  correctOption: z.string(),
 });
 
 export const ActivitiesSchema = z.object({
@@ -23,8 +18,8 @@ export const ActivitiesSchema = z.object({
 });
 
 export const NewSubjectSchema = z.object({
-  question: z.string(),
-  options: z.array(QuizOptionSchema),
+  description: z.string(),
+  options: z.array(z.string()).min(2).max(2),
 });
 
 export const UnderstandSubjectsSchema = z.object({

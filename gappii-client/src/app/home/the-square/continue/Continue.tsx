@@ -16,7 +16,6 @@ export const Continue = () => {
             setPlayIntro(true)
         }
     });
-    console.log('rerendered')
 
     return (
         <PageWrapper
@@ -26,6 +25,7 @@ export const Continue = () => {
         >
             {playIntro ?
                 <SessionIntroduction
+                    text={ isAddLessonRoute ? "Let's understand better what you want to learn" : "Ready?"}
                     onIntroductionComplete={() => setPlayIntro(false)}
                 />
                 :

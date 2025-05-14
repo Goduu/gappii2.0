@@ -8,12 +8,12 @@ import { experimental_useObject } from "@ai-sdk/react";
 
 interface GameOverScreenProps {
   score: number;
-  totalQuestions: number;
+  totalActivities: number;
   onReset: () => void;
   isAddLessonRoute: boolean;
 }
 
-export function LearningSessionEnd({ score, totalQuestions, onReset, isAddLessonRoute }: GameOverScreenProps) {
+export function LearningSessionEnd({ score, totalActivities, onReset, isAddLessonRoute }: GameOverScreenProps) {
   const { changeRouter: setRouter } = useSquareRouter()
   const { attempts } = useLessonSession()
 
@@ -35,7 +35,7 @@ export function LearningSessionEnd({ score, totalQuestions, onReset, isAddLesson
     if (!isLoading) {
       submit({
         userPrompt: attempts.map(attempt =>
-          "question: " + attempt.activity.question
+          "description: " + attempt.activity.description
         ).join("\n")
       })
     }
@@ -50,7 +50,7 @@ export function LearningSessionEnd({ score, totalQuestions, onReset, isAddLesson
       transition={{ type: 'spring', damping: 20 }}
     >
       <h2 className="text-3xl font-bold mb-4">Game Over!</h2>
-      <p className="text-xl mb-6">Your final score: {score}/{totalQuestions}</p>
+      <p className="text-xl mb-6">Your final score: {score}/{totalActivities}</p>
       <div className="flex gap-4">
         <button
           className="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-bold text-white transition-colors cursor-pointer"

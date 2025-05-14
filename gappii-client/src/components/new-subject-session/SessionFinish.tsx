@@ -12,7 +12,7 @@ import GibberishText from "../magicui/gibberish-text";
 export function NewSubjectSessionFinish() {
     const { changeRouter: setRouter } = useSquareRouter()
     const [loadedSubject, setLoadedSubject] = useState(false)
-    const { newSubjectAttempts, setQuestions, currentSubject, setCurrentSubject } = useLessonSession()
+    const { newSubjectAttempts, setActivities, currentSubject, setCurrentSubject } = useLessonSession()
 
 
     const { submit, isLoading } = experimental_useObject({
@@ -20,8 +20,7 @@ export function NewSubjectSessionFinish() {
         schema: CreateSubjectTopicsAndActivitiesSchema,
         onFinish({ object }) {
             if (object != null) {
-                console.log('setting questions', object)
-                setQuestions(object.activities)
+                setActivities(object.activities)
                 setCurrentSubject(object.subject)
                 setTimeout(() => {
                     setRouter('session/continue')
@@ -37,8 +36,8 @@ export function NewSubjectSessionFinish() {
     if (!loadedSubject && !isLoading) {
         const userPrompt = {
             userPrompt: newSubjectAttempts.map(attempt =>
-                "question: " + attempt.activity.question +
-                "answer " + attempt.activity.options.find(option => option.id === attempt.answerId)?.text
+                "description: " + attempt.activity.description +
+                "answer " + attempt.activity.options.find(option => option === attempt.answerId)
             ).join("\n")
         }
         console.log(userPrompt)

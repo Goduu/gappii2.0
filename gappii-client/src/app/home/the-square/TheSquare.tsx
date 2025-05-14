@@ -4,6 +4,7 @@ import OrbitingMenu from "./OrbitingMenu"
 import TheCircle from "./TheCircle"
 import { useSquareRouter } from "../RouterContext"
 import BackStripe from "../BackStripe"
+import LogoTextWhite from "../LogoTextWhite"
 
 export default function TheSquare() {
     const { router, changeRouter: setRouter } = useSquareRouter()
@@ -53,6 +54,21 @@ export default function TheSquare() {
                     )}
                     onClick={handleClick}
                 >
+                    <AnimatePresence mode="wait" initial={false}>
+                        {isInSquare &&
+                            <motion.div
+                                animate={{ opacity: [0, 0.6] }}
+                                transition={{
+                                    duration: 0.5,
+                                    delay: 0.4,
+                                    ease: "easeInOut"
+                                }}
+                                className="animate-pulse">
+                                <LogoTextWhite />
+                            </motion.div>
+                        }
+                    </AnimatePresence>
+
                     <AnimatePresence>
                         {router !== "home" && (
                             <OrbitingMenu

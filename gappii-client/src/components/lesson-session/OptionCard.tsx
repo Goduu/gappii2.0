@@ -1,12 +1,10 @@
 "use client"
 
 import { motion } from "motion/react"
-import { QuizOption } from "./types"
 import { cn } from "@/lib/utils";
-import { DeepPartial } from "ai";
 
 interface OptionCardProps {
-  option: DeepPartial<QuizOption> | undefined;
+  option: string | undefined;
   position: 'left' | 'right';
 }
 
@@ -15,7 +13,7 @@ export function OptionCard({ option, position }: OptionCardProps) {
 
   return (
     <motion.div
-      key={`${position}-${option?.id}`}
+      key={`${position}-${option}`}
       className={cn(
         "text-white text-sm md:text-xl font-bold w-full h-20 flex items-center justify-center",
         "p-3 md:p-6 bg-white/10 rounded-4xl select-none")}
@@ -24,7 +22,7 @@ export function OptionCard({ option, position }: OptionCardProps) {
       exit={{ x: isLeft ? -100 : 100, opacity: 0 }}
       transition={{ type: 'spring', damping: 20 }}
     >
-      {option?.text}
+      {option}
     </motion.div>
   )
 } 
